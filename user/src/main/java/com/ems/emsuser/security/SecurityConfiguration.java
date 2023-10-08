@@ -1,7 +1,7 @@
 package com.ems.emsuser.security;
 
 import com.ems.emsuser.enums.Role;
-import com.ems.emsuser.repositories.UserRepository;
+import com.ems.emsuser.repository.UserRepository;
 import com.ems.emsuser.utils.GeneralConfig;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -50,7 +50,7 @@ public class SecurityConfiguration {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
-    public AuthenticationManager authenticationManager() throws  Exception {
+    public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -72,6 +72,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/test").hasRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/test/client").hasRole(Role.CLIENT.name())
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptions) -> exceptions
@@ -83,6 +84,7 @@ public class SecurityConfiguration {
 
     /**
      * Bean for setting up the authentication provider
+     *
      * @return - DaoAuthenticationProvider object
      */
     @Bean
@@ -95,6 +97,7 @@ public class SecurityConfiguration {
 
     /**
      * Bean for setting up the password encoder
+     *
      * @return - PasswordEncoder object
      */
     @Bean
@@ -104,6 +107,7 @@ public class SecurityConfiguration {
 
     /**
      * Bean for setting up the JWT decoder
+     *
      * @return - JwtDecoder object
      */
     @Bean
@@ -113,6 +117,7 @@ public class SecurityConfiguration {
 
     /**
      * Bean for setting up the JWT encoder
+     *
      * @return - JwtEncoder object
      */
     @Bean

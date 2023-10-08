@@ -1,4 +1,4 @@
-package com.ems.emsuser.controllers;
+package com.ems.emsuser.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping
-    public String testMethod() {
-        return "ababa";
+    public String testAdminMethod() {
+        return "You are logged in as ADMIN!";
+    }
+
+    @GetMapping("/client")
+    public String testClientMethod() {
+        return "You are logged in as CLIENT!";
     }
 }

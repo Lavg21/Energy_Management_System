@@ -21,7 +21,7 @@ public class UserPrincipal implements UserDetails {
         if (user.isAdmin()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
         }
         return authorities;
 

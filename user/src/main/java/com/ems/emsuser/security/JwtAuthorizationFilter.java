@@ -1,7 +1,7 @@
 package com.ems.emsuser.security;
 
 import com.ems.emsuser.domain.UserPrincipal;
-import com.ems.emsuser.repositories.UserRepository;
+import com.ems.emsuser.repository.UserRepository;
 import com.ems.emsuser.utils.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,10 +45,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     /**
      * Main filtering method for validating the request. If the user is logged in, the request will provide an 'Authorization'
      * header with a valid JWT token
-     * @param request - authorization request managed by Spring Security
+     *
+     * @param request  - authorization request managed by Spring Security
      * @param response - authorization response managed by Spring Security
-     * @param chain - filter chain managed by Spring Security
-     * @throws IOException - if filtering fails
+     * @param chain    - filter chain managed by Spring Security
+     * @throws IOException      - if filtering fails
      * @throws ServletException - if filtering fails
      */
     @Override
@@ -68,6 +69,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     /**
      * extracts the JWT token from the 'Authorization' header, decodes it and gets the user id
      * to validate the existence of the user who made the request
+     *
      * @param request - authorization request managed by Spring Security
      * @return - Authentication object, to be managed by Spring Security
      */

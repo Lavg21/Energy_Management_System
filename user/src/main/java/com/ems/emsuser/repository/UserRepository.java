@@ -1,4 +1,4 @@
-package com.ems.emsuser.repositories;
+package com.ems.emsuser.repository;
 
 import com.ems.emsuser.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

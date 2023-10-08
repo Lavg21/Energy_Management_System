@@ -1,8 +1,8 @@
-package com.ems.emsuser.services;
+package com.ems.emsuser.service;
 
 import com.ems.emsuser.domain.UserPrincipal;
 import com.ems.emsuser.domain.entity.User;
-import com.ems.emsuser.repositories.UserRepository;
+import com.ems.emsuser.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +31,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     public User getCurrentlyLoggedUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(principal instanceof UserPrincipal) {
+        if (principal instanceof UserPrincipal) {
             Integer id = ((UserPrincipal) principal).getId();
             return userRepository.findById(id).orElse(null);
         }

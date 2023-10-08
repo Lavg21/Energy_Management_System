@@ -40,7 +40,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     /**
      * Attempts to authenticate a user with the credentials received from an authentication http request
-     * @param request - should have 'Authorization' header, with basic auth
+     *
+     * @param request  - should have 'Authorization' header, with basic auth
      * @param response - the response sent after the authentication process ends
      * @return Authentication - object that will be managed by Spring Security
      * @throws AuthenticationException - if the authentication wasn't successfully
@@ -50,7 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         final String basicAuth = request.getHeader("Authorization");
 
-        if(basicAuth != null && basicAuth.toLowerCase().startsWith("basic")) {
+        if (basicAuth != null && basicAuth.toLowerCase().startsWith("basic")) {
             //Authorization: Basic base64credentials
             String base64Credentials = basicAuth.substring("Basic".length()).trim();
             byte[] credentialsDecoded = Base64.getDecoder().decode(base64Credentials);
@@ -72,9 +73,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     /**
      * method that generates a JWT token if the user authenticates successfully
-     * @param request - authentication request managed by Spring security
-     * @param response - authentication response managed by Spring security, which will contain JWT token in its header
-     * @param chain - filter chain managed by Spring Security
+     *
+     * @param request    - authentication request managed by Spring security
+     * @param response   - authentication response managed by Spring security, which will contain JWT token in its header
+     * @param chain      - filter chain managed by Spring Security
      * @param authResult - the authentication result
      */
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
@@ -82,7 +84,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String scope = authResult.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
-        JwtClaimsSet claimsSet= JwtClaimsSet.builder()
+        JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
                 .expiresAt(new Date(System.currentTimeMillis() + JwtProperties.VALIDITY_PERIOD).toInstant())
@@ -96,9 +98,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     /**
      * If the user was not authenticated successfully, we check the specific errors that could be thrown,
      * we set the response status as unauthorized(401), and we customize the error response
-     * @param request - authentication request managed by Spring Security
+     *
+     * @param request  - authentication request managed by Spring Security
      * @param response - authentication response managed by Spring Security
-     * @param failed - AuthenticationException object
+     * @param failed   - AuthenticationException object
      * @throws IOException - if it cannot write the error message to response
      */
     @Override
@@ -107,7 +110,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("Invalid credentials!");
         }
-        if(failed.getMessage().equals("User is disabled")) {
+        if (failed.getMessage().equals("User is disabled")) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("Your account is awaiting approval!");
         }
