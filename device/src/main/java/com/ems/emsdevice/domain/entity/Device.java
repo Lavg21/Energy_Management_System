@@ -1,9 +1,6 @@
 package com.ems.emsdevice.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "devices")
 public class Device {
 
@@ -26,6 +24,6 @@ public class Device {
     @Column(name = "address", nullable = false, length = 100)
     private String address;
 
-    @Column(name = "cosumption", nullable = false, length = 100)
-    private Double cosumption;
+    @Column(name = "consumption", nullable = false, length = 100)
+    private Double consumption;
 }
