@@ -6,7 +6,9 @@ import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +21,25 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(13);
+
     public User createUser(User user) {
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
-            throw new DuplicateEmailException("Email address is already in use.");
+            throw new DuplicateEmailException("Email address is already in use!");
         }
 
+        user.setPassword(generateAndEncodePassword());
+
         return userRepository.save(user);
+    }
+
+    private String generateAndEncodePassword() {
+        String password = RandomStringUtils.random(10, true, true);
+
+        return passwordEncoder.encode(password);
     }
 
     public List<User> getAllUsers() {
@@ -42,11 +54,11 @@ public class UserService {
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
 
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found!"));
 
         String newEmail = userDTO.getEmail();
         if (!existingUser.getEmail().equals(newEmail) && userRepository.findByEmail(newEmail).isPresent()) {
-            throw new DuplicateEmailException("Email is already in use by another user");
+            throw new DuplicateEmailException("Email is already in use by another user!");
         }
 
         existingUser.setName(userDTO.getName());
@@ -61,14 +73,14 @@ public class UserService {
                 .name(updatedUser.getName())
                 .email(updatedUser.getEmail())
                 .password(updatedUser.getPassword())
-                .isAdmin(updatedUser.isAdmin())
+                .admin(updatedUser.isAdmin())
                 .build();
     }
 
     public void deleteUser(Integer id) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found!"));
 
         userRepository.delete(user);
     }

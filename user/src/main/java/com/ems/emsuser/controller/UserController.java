@@ -2,7 +2,6 @@ package com.ems.emsuser.controller;
 
 import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
-import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class UserController {
     @Autowired
     private final UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
         User user = User.builder()
@@ -40,13 +39,15 @@ public class UserController {
                 .name(createdUser.getName())
                 .email(createdUser.getEmail())
                 .password(createdUser.getPassword())
-                .isAdmin(createdUser.isAdmin())
+                .admin(createdUser.isAdmin())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdUserDTO);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
 
         List<User> users = userService.getAllUsers();
@@ -56,10 +57,10 @@ public class UserController {
                             .id(user.getId())
                             .name(user.getName())
                             .email(user.getEmail())
-                            .password(user.getPassword())
-                            .isAdmin(user.isAdmin())
+                            .admin(user.isAdmin())
                             .build())
                     .collect(Collectors.toList());
+
             return ResponseEntity.ok(userDTOs);
         } else {
             return ResponseEntity.noContent().build();
@@ -76,8 +77,7 @@ public class UserController {
                     .id(user.getId())
                     .name(user.getName())
                     .email(user.getEmail())
-                    .password(user.getPassword())
-                    .isAdmin(user.isAdmin())
+                    .admin(user.isAdmin())
                     .build();
 
             return ResponseEntity.ok(userDTO);

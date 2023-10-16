@@ -22,7 +22,7 @@ public class DeviceController {
     @Autowired
     private final DeviceService deviceService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<DeviceDTO> createDevice(@RequestBody DeviceDTO deviceDTO) {
 
         Device device = Device.builder()
@@ -43,13 +43,13 @@ public class DeviceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDeviceDTO);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
 
-        List<Device> users = deviceService.getAllDevices();
+        List<Device> devices = deviceService.getAllDevices();
 
-        if (users != null && !users.isEmpty()) {
-            List<DeviceDTO> deviceDTOs = users.stream()
+        if (devices != null && !devices.isEmpty()) {
+            List<DeviceDTO> deviceDTOs = devices.stream()
                     .map(device -> DeviceDTO.builder()
                             .id(device.getId())
                             .address(device.getAddress())
@@ -64,7 +64,7 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DeviceDTO> findUserById(@PathVariable Integer id) {
+    public ResponseEntity<DeviceDTO> findDeviceById(@PathVariable Integer id) {
         Device device = deviceService.findDeviceById(id);
 
         if (device != null) {
@@ -83,11 +83,11 @@ public class DeviceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DeviceDTO> updateUser(@PathVariable Integer id, @RequestBody DeviceDTO deviceDTO) {
+    public ResponseEntity<DeviceDTO> updateDevice(@PathVariable Integer id, @RequestBody DeviceDTO deviceDTO) {
 
         try {
-            DeviceDTO updatedUserDTO = deviceService.updateDevice(id, deviceDTO);
-            return ResponseEntity.ok(updatedUserDTO);
+            DeviceDTO updatedDeviceDTO = deviceService.updateDevice(id, deviceDTO);
+            return ResponseEntity.ok(updatedDeviceDTO);
         } catch (DeviceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
