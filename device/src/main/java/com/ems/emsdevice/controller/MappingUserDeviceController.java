@@ -1,8 +1,9 @@
 package com.ems.emsdevice.controller;
 
 import com.ems.emsdevice.domain.dto.MappingUserDeviceDTO;
-import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.domain.entity.MappingUserDevice;
+import com.ems.emsdevice.exception.ClientException;
+import com.ems.emsdevice.exception.ClientStatusException;
 import com.ems.emsdevice.service.MappingUserDeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +24,29 @@ public class MappingUserDeviceController {
     private final MappingUserDeviceService mappingUserDeviceService;
 
     @PostMapping
-    public ResponseEntity<MappingUserDeviceDTO> createMapping(@RequestBody MappingUserDeviceDTO mappingUserDeviceDTO) {
+    public ResponseEntity<?> createMapping(@RequestBody MappingUserDeviceDTO mappingUserDeviceDTO, @RequestHeader("Authorization") String token) {
 
-        MappingUserDevice mappingUserDevice = MappingUserDevice.builder()
-                .userID(mappingUserDeviceDTO.getUserID())
+        try {
+            MappingUserDevice mappingUserDevice = MappingUserDevice.builder()
+                    .numberOfDevices(mappingUserDeviceDTO.getNumberOfDevices())
+                    .build();
 
-                .numberOfDevices(mappingUserDeviceDTO.getNumberOfDevices())
-                .build();
+            MappingUserDevice createdMapping = mappingUserDeviceService.createMapping(mappingUserDevice, mappingUserDeviceDTO.getUserID(), mappingUserDeviceDTO.getDeviceID(), token);
 
-        MappingUserDevice createdMapping = mappingUserDeviceService.createMapping(mappingUserDevice, mappingUserDeviceDTO.getDeviceID());
+            MappingUserDeviceDTO createdMappingDTO = MappingUserDeviceDTO.builder()
+                    .id(createdMapping.getId())
+                    .userID(createdMapping.getUserID())
+                    .deviceID(createdMapping.getDevice().getId())
+                    .numberOfDevices(createdMapping.getNumberOfDevices())
+                    .build();
 
-        MappingUserDeviceDTO createdMappingDTO = MappingUserDeviceDTO.builder()
-                .id(createdMapping.getId())
-                .userID(createdMapping.getUserID())
-                .deviceID(createdMapping.getDevice().getId())
-                .numberOfDevices(createdMapping.getNumberOfDevices())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMappingDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdMappingDTO);
+        } catch (ClientException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+        catch (ClientStatusException exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
     }
 
     @GetMapping
