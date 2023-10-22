@@ -5,6 +5,7 @@ import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.exception.DeviceNotFoundException;
 import com.ems.emsdevice.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,12 @@ public class DeviceService {
 
     public Device createDevice(Device device) {
 
-        return deviceRepository.save(device);
+        if (StringUtils.isBlank(device.getAddress()) || StringUtils.isBlank(device.getDescription())
+                || device.getConsumption() <= 0)
+            throw new IllegalArgumentException("Invalid data for device!");
+        else {
+            return deviceRepository.save(device);
+        }
     }
 
     public List<Device> getAllDevices() {

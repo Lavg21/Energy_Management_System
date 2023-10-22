@@ -43,8 +43,7 @@ public class MappingUserDeviceController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdMappingDTO);
         } catch (ClientException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-        }
-        catch (ClientStatusException exception) {
+        } catch (ClientStatusException exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
     }

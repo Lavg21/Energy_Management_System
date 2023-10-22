@@ -23,24 +23,28 @@ public class DeviceController {
     private final DeviceService deviceService;
 
     @PostMapping
-    public ResponseEntity<DeviceDTO> createDevice(@RequestBody DeviceDTO deviceDTO) {
+    public ResponseEntity<?> createDevice(@RequestBody DeviceDTO deviceDTO) {
 
-        Device device = Device.builder()
-                .address(deviceDTO.getAddress())
-                .description(deviceDTO.getDescription())
-                .consumption(deviceDTO.getConsumption())
-                .build();
+        try {
+            Device device = Device.builder()
+                    .address(deviceDTO.getAddress())
+                    .description(deviceDTO.getDescription())
+                    .consumption(deviceDTO.getConsumption())
+                    .build();
 
-        Device createdDevice = deviceService.createDevice(device);
+            Device createdDevice = deviceService.createDevice(device);
 
-        DeviceDTO createdDeviceDTO = DeviceDTO.builder()
-                .id(createdDevice.getId())
-                .address(createdDevice.getAddress())
-                .description(createdDevice.getDescription())
-                .consumption(createdDevice.getConsumption())
-                .build();
+            DeviceDTO createdDeviceDTO = DeviceDTO.builder()
+                    .id(createdDevice.getId())
+                    .address(createdDevice.getAddress())
+                    .description(createdDevice.getDescription())
+                    .consumption(createdDevice.getConsumption())
+                    .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDeviceDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdDeviceDTO);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
     }
 
     @GetMapping

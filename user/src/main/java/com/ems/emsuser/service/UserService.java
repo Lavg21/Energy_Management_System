@@ -7,6 +7,7 @@ import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(13);
 
     public User createUser(User user) {
+
+        if (StringUtils.isBlank(user.getName()) || StringUtils.isBlank(user.getEmail()) || StringUtils.isBlank(user.getPassword()))
+            throw new IllegalArgumentException("Invalid data for user!");
 
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 

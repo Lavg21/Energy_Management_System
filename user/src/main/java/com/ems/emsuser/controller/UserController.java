@@ -23,28 +23,32 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
 
-        User user = User.builder()
-                .name(userDTO.getName())
-                .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
-                .admin(userDTO.isAdmin())
-                .build();
+        try {
+            User user = User.builder()
+                    .name(userDTO.getName())
+                    .email(userDTO.getEmail())
+                    .password(userDTO.getPassword())
+                    .admin(userDTO.isAdmin())
+                    .build();
 
-        User createdUser = userService.createUser(user);
+            User createdUser = userService.createUser(user);
 
-        UserDTO createdUserDTO = UserDTO.builder()
-                .id(createdUser.getId())
-                .name(createdUser.getName())
-                .email(createdUser.getEmail())
-                .password(createdUser.getPassword())
-                .admin(createdUser.isAdmin())
-                .build();
+            UserDTO createdUserDTO = UserDTO.builder()
+                    .id(createdUser.getId())
+                    .name(createdUser.getName())
+                    .email(createdUser.getEmail())
+                    .password(createdUser.getPassword())
+                    .admin(createdUser.isAdmin())
+                    .build();
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdUserDTO);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createdUserDTO);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
     }
 
     @GetMapping
@@ -82,7 +86,6 @@ public class UserController {
 
             return ResponseEntity.ok(userDTO);
         } else {
-//            throw new UserNotFoundException("User with ID " + id + " not found");
             return ResponseEntity.notFound().build();
         }
     }

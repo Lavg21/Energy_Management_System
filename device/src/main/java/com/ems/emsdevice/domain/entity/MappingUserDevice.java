@@ -22,7 +22,6 @@ public class MappingUserDevice {
     private Integer userID;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    //@JoinColumn(name = "device_id", insertable = false, updatable = false)
     private Device device;
 
     @Column(name = "count")
