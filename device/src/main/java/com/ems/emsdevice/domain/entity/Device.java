@@ -3,6 +3,8 @@ package com.ems.emsdevice.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,4 +28,8 @@ public class Device {
 
     @Column(name = "consumption", nullable = false, length = 100)
     private Double consumption;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "device")
+    private List<MappingUserDevice> mappingUserDeviceList = new ArrayList<>();
 }

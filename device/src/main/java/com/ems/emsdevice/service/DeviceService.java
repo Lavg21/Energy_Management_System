@@ -54,7 +54,8 @@ public class DeviceService {
 
     public void deleteDevice(Integer id) {
 
-        Device device = deviceRepository.findById(id)
+        Device device = deviceRepository
+                .findById(id)
                 .orElseThrow(() -> new DeviceNotFoundException("Device with ID " + id + " not found"));
 
         deviceRepository.delete(device);

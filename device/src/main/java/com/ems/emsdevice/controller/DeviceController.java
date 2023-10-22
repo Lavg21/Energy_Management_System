@@ -57,6 +57,7 @@ public class DeviceController {
                             .consumption(device.getConsumption())
                             .build())
                     .collect(Collectors.toList());
+
             return ResponseEntity.ok(deviceDTOs);
         } else {
             return ResponseEntity.noContent().build();
@@ -87,6 +88,7 @@ public class DeviceController {
 
         try {
             DeviceDTO updatedDeviceDTO = deviceService.updateDevice(id, deviceDTO);
+
             return ResponseEntity.ok(updatedDeviceDTO);
         } catch (DeviceNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -100,6 +102,7 @@ public class DeviceController {
 
         if (device != null) {
             deviceService.deleteDevice(id);
+
             return ResponseEntity.ok("Device with ID " + id + " has been deleted");
         } else {
             return ResponseEntity.notFound().build();
