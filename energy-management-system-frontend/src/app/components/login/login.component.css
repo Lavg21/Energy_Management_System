@@ -21,11 +21,12 @@ body {
 
 .login-form {
   flex: 1;
-  padding: 10%;
+  padding: 5%;
 }
 
 .login-form h2 {
   font-size: 24px;
+  margin-top: 10%;
   margin-bottom: 5%;
   text-align: center;
 }
@@ -51,7 +52,7 @@ input {
 
 button {
   position: absolute;
-  left: 32%;
+  left: 30%;
   background-color: #004f67;
   color: #fff;
   border: none;
@@ -73,5 +74,11 @@ button:hover {
   background-image: url('src/assets/images/login-image.png');
   background-size: cover;
   background-position: center;
+}
+
+.error-message {
+  color: darkred;
+  font-size: 1rem;
+  margin-top: 2%;
 }
 

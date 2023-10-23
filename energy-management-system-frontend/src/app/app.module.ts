@@ -7,11 +7,13 @@ import { LoginComponent } from './components/login/login.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminMenuComponent } from './components/admin-menu/admin-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    AdminMenuComponent,
   ],
   imports: [
     BrowserModule,
