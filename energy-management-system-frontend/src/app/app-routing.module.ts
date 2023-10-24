@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {LoginComponent} from "./components/login/login.component";
 import {AdminMenuComponent} from "./components/admin-menu/admin-menu.component";
+import {UserOptionsComponent} from "./components/user-options/user-options.component";
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'admin-menu',
     component: AdminMenuComponent
+  },
+  {
+    path: 'user-options',
+    component: UserOptionsComponent
   }
 ];
 
