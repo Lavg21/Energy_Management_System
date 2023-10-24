@@ -1,0 +1,22 @@
+.vertical-navbar {
+  list-style-type: none;
+  padding: 0;
+}
+
+.vertical-navbar li {
+  padding: 20%;
+}
+
+.vertical-navbar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.vertical-navbar a:hover {
+  background-color: rgba(14, 132, 168, 0.68);
+  width: 100%;
+  padding: 10%;
+  border-radius: 8%;
+}
