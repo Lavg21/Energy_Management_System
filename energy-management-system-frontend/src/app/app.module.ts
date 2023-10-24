@@ -10,6 +10,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminMenuComponent} from './components/admin-menu/admin-menu.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {UserOptionsComponent} from "./components/user-options/user-options.component";
+import { AddUserComponent } from './components/add-user/add-user.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import {UserOptionsComponent} from "./components/user-options/user-options.compo
     AdminMenuComponent,
     NavbarComponent,
     UserOptionsComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,8 @@ import {UserOptionsComponent} from "./components/user-options/user-options.compo
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

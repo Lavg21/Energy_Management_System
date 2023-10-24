@@ -1,0 +1,40 @@
+<html>
+<body>
+<h2>Add User</h2>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" id="name" formControlName="name" placeholder="Enter name">
+    <div *ngIf="userForm?.get('name')?.hasError('required') && userForm?.get('name')?.touched"
+         class="error-message">Name is required!
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" formControlName="email" placeholder="Enter email">
+    <div *ngIf="userForm?.get('email')?.hasError('required') && userForm?.get('email')?.touched"
+         class="error-message">Email is required!
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" formControlName="password" placeholder="Enter password">
+    <div *ngIf="userForm?.get('password')?.hasError('required') && userForm?.get('password')?.touched"
+         class="error-message">Password is required!
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="role">Role</label>
+    <input type="text" id="role" formControlName="role" placeholder="Enter role">
+    <div *ngIf="userForm?.get('role')?.hasError('required') && userForm?.get('role')?.touched"
+         class="error-message">Role is required!
+    </div>
+  </div>
+
+  <button type="submit">Add User</button>
+</form>
+</body>
+</html>
