@@ -9,9 +9,15 @@ import {HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminMenuComponent} from './components/admin-menu/admin-menu.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
-import {UserOptionsComponent} from "./components/user-options/user-options.component";
-import { AddUserComponent } from './components/add-user/add-user.component';
+// <<<<<<< Updated upstream
+// import {UserOptionsComponent} from "./components/user-options/user-options.component";
+// import { AddUserComponent } from './components/add-user/add-user.component';
+// import {MatDialogModule} from "@angular/material/dialog";
+// =======
+import {UserOptionsComponent} from './components/user-options/user-options.component';
+import {AddUserComponent} from './components/user-options/add-user/add-user.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {UserDialogService} from "./services/user-dialog.service";
 
 @NgModule({
   declarations: [
@@ -31,7 +37,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     BrowserAnimationsModule,
     MatDialogModule
   ],
-  providers: [],
+  providers: [UserDialogService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

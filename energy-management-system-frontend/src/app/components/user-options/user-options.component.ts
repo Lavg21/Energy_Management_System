@@ -5,7 +5,7 @@ import {UserDialogService} from "../../services/user-dialog.service";
 @Component({
   selector: 'app-user-options',
   templateUrl: './user-options.component.html',
-  styleUrls: ['./user-options.component.css']
+  styleUrls: ['./user-options.component.css'],
 })
 export class UserOptionsComponent {
 
@@ -32,16 +32,20 @@ export class UserOptionsComponent {
   //   }
   // }
 
-  constructor(private router: Router) {}
+  //constructor(private router: Router) {}
+  constructor(private router: Router, private userDialogService: UserDialogService) {}
 
   navigateToUserForm(action: string, userId?: number) {
     if (action === 'add') {
-      // Redirect to the user form for adding a new user
-      this.router.navigate(['/admin/user-management/edit-user']);
-      console.log("Add button was pressed!");
+      this.userDialogService.openUserPopup().afterClosed().subscribe(result => {
+        // Handle the result if needed (e.g., result could contain user data)
+        if (result) {
+          console.log('User added:', result);
+          // You can also save the new user data to your users array
+        }
+      });
     } else if (action === 'edit' && userId) {
-      // Redirect to the user form for editing an existing user
-      this.router.navigate(['/admin/user-management/edit-user', userId]);
+      // Open edit popup
       console.log("Edit button was pressed!");
     }
   }

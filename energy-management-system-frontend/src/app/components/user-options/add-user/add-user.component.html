@@ -4,7 +4,7 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" id="name" formControlName="name" placeholder="Enter name">
+    <input type="text" id="name" formControlName="name" placeholder="Enter name" autocomplete="name">
     <div *ngIf="userForm?.get('name')?.hasError('required') && userForm?.get('name')?.touched"
          class="error-message">Name is required!
     </div>
@@ -12,7 +12,7 @@
 
   <div class="form-group">
     <label for="email">Email</label>
-    <input type="email" id="email" formControlName="email" placeholder="Enter email">
+    <input type="email" id="email" formControlName="email" placeholder="Enter email" autocomplete="email">
     <div *ngIf="userForm?.get('email')?.hasError('required') && userForm?.get('email')?.touched"
          class="error-message">Email is required!
     </div>

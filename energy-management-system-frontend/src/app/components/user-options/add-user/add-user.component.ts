@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 
@@ -7,12 +7,13 @@ import {MatDialogRef} from "@angular/material/dialog";
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css']
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
+
   userForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<AddUserComponent>
+    private dialogRef: MatDialogRef<AddUserComponent> // Inject MatDialogRef
   ) {
     this.userForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -38,10 +39,10 @@ export class AddUserComponent {
         console.log('Email:', email);
         console.log('Password:', password);
         console.log('Role:', role);
-      }
 
-      this.dialogRef.close(this.userForm.value); // Close the modal with user data
-      console.log("User added");
+        // Close the dialog with a result (you can pass any data you want)
+        this.dialogRef.close(this.userForm.value);
+      }
     }
   }
 }
