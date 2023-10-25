@@ -37,9 +37,9 @@ export class DeviceOptionsComponent {
     }
   }
 
-  deleteDevice(userId: number) {
+  deleteDevice(deviceId: number) {
     if (confirm('Are you sure you want to delete this user?')) {
-      this.devices = this.devices.filter(device => device.id !== userId);
+      this.devices = this.devices.filter(device => device.id !== deviceId);
       console.log("Delete button was pressed!");
     }
   }

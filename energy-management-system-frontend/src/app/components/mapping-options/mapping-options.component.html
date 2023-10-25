@@ -1,1 +1,29 @@
-<p>mapping-options works!</p>
+<html>
+<body>
+<h2>Mappings Management</h2>
+<button (click)="navigateToMapping('add')" class="add-button">ADD Mapping</button>
+<table>
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Device</th>
+    <th>Address</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let mapping of mappings">
+    <td>{{ mapping.user }}</td>
+    <td>{{ mapping.device }}</td>
+    <td>{{ mapping.address }}</td>
+    <td>
+      <div class="action-buttons">
+        <button (click)="deleteMapping(mapping.id)" class="delete-button">DELETE</button>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<app-navbar></app-navbar>
+</body>
+</html>

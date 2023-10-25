@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {Router} from "@angular/router";
+import {DeviceDialogService} from "../../services/device-dialog.service";
 
 @Component({
   selector: 'app-mapping-options',
@@ -6,5 +8,41 @@ import { Component } from '@angular/core';
   styleUrls: ['./mapping-options.component.css']
 })
 export class MappingOptionsComponent {
+
+  mappings: any[] = [
+    {id: 1, user: 'User 1', device: "Device 1", address: 'Cluj-Napoca'},
+    {id: 1, user: 'User 2', device: "Device 1", address: 'Suceava'},
+    {id: 1, user: 'User 3', device: "Device 2", address: 'Constanta'}
+  ]
+
+  constructor(private router: Router) {
+    // this.devices = this.deviceService.getAllDevices();
+  }
+
+  navigateToMapping(action: string, userId?: number) {
+   /* if (action === 'add') {
+
+      this.deviceDialogService.openAddDevicePopup().afterClosed().subscribe(result => {
+        if (result) {
+          console.log('Device added:', result);
+        }
+      });
+    } else if (action === 'edit' && userId) {
+
+      this.deviceDialogService.openEditDevicePopup().afterClosed().subscribe(result => {
+        if (result) {
+          console.log('Device edited:', result);
+        }
+      });
+      console.log("Edit button was pressed!");
+    }*/
+  }
+
+  deleteMapping(mappingId: number) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.mappings = this.mappings.filter(mapping => mapping.id !== mappingId);
+      console.log("Delete button was pressed!");
+    }
+  }
 
 }
