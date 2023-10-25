@@ -4,6 +4,7 @@ import {LoginComponent} from "./components/login/login.component";
 import {AdminMenuComponent} from "./components/admin-menu/admin-menu.component";
 import {UserOptionsComponent} from "./components/user-options/user-options.component";
 import {DeviceOptionsComponent} from "./components/device-options/device-options.component";
+import {MappingOptionsComponent} from "./components/mapping-options/mapping-options.component";
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'device-options',
     component: DeviceOptionsComponent
+  },
+  {
+    path: 'mapping-options',
+    component: MappingOptionsComponent
   }
 ];
 

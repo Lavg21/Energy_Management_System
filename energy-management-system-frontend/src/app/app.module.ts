@@ -17,6 +17,7 @@ import { EditUserComponent } from './components/user-options/edit-user/edit-user
 import { DeviceOptionsComponent } from './components/device-options/device-options.component';
 import { AddDeviceComponent } from './components/device-options/add-device/add-device.component';
 import { EditDeviceComponent } from './components/device-options/edit-device/edit-device.component';
+import { MappingOptionsComponent } from './components/mapping-options/mapping-options.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { EditDeviceComponent } from './components/device-options/edit-device/edi
     DeviceOptionsComponent,
     AddDeviceComponent,
     EditDeviceComponent,
+    MappingOptionsComponent,
   ],
   imports: [
     BrowserModule,
