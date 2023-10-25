@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {UserDialogService} from "../../services/user-dialog.service";
+import {DeviceDialogService} from "../../services/device-dialog.service";
 
 @Component({
   selector: 'app-device-options',
@@ -10,25 +10,25 @@ import {UserDialogService} from "../../services/user-dialog.service";
 export class DeviceOptionsComponent {
 
   devices: any[] = [
-    { id: 1, description: 'Device 1', address: 'Cluj-Napoca', consumption: "3" },
-    { id: 2, description: 'Device 2', address: 'Suceava', consumption: "4" },
+    {id: 1, description: 'Device 1', address: 'Cluj-Napoca', consumption: "3"},
+    {id: 2, description: 'Device 2', address: 'Suceava', consumption: "4"},
   ];
 
-  constructor(private router: Router, private userDialogService: UserDialogService) {
+  constructor(private router: Router, private deviceDialogService: DeviceDialogService) {
     // this.devices = this.deviceService.getAllDevices();
   }
 
   navigateToDeviceForm(action: string, userId?: number) {
     if (action === 'add') {
 
-      this.userDialogService.openAddUserPopup().afterClosed().subscribe(result => {
+      this.deviceDialogService.openAddDevicePopup().afterClosed().subscribe(result => {
         if (result) {
           console.log('Device added:', result);
         }
       });
     } else if (action === 'edit' && userId) {
 
-      this.userDialogService.openEditUserPopup().afterClosed().subscribe(result => {
+      this.deviceDialogService.openEditDevicePopup().afterClosed().subscribe(result => {
         if (result) {
           console.log('Device edited:', result);
         }

@@ -1,0 +1,56 @@
+form {
+  max-width: 400px;
+  margin: 2%;
+  margin-left: 4%;
+  padding: 20px;
+  border: 1px solid lightblue;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 20px;
+  color: black;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: rgb(219, 239, 250);
+}
+
+button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(3, 96, 128, 0.75);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: rgb(5, 77, 101);
+}
+
+.error-message {
+  color: darkred;
+  font-size: 1rem;
+  margin-top: 2%;
+}
