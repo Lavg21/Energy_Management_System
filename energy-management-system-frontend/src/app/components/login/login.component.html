@@ -13,7 +13,7 @@
       <div class="form-group">
         <label for="email">Username</label>
         <input type="text" id="email" name="email" formControlName="email" placeholder="Enter your email">
-        <div *ngIf="loginForm?.get('email')?.hasError('required') && loginForm?.get('email')?.touched"
+        <div *ngIf="isEmailError"
              class="error-message">Email is required!
         </div>
       </div>
@@ -21,7 +21,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" formControlName="password"
                placeholder="Enter your password">
-        <div *ngIf="loginForm?.get('password')?.hasError('required') && loginForm?.get('password')?.touched"
+        <div *ngIf="isPasswordError"
              class="error-message">Password is required!
         </div>
       </div>

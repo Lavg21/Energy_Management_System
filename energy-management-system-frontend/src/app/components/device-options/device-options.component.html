@@ -1,1 +1,30 @@
-<p>device-options works!</p>
+<html>
+<body>
+<h2>Device Management</h2>
+<button (click)="navigateToDeviceForm('add')" class="add-button">ADD DEVICE</button>
+<table>
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Address</th>
+    <th>Consumption</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let device of devices">
+    <td>{{ device.description }}</td>
+    <td>{{ device.address }}</td>
+    <td>{{ device.consumption }}</td>
+    <td>
+      <div class="action-buttons">
+        <button (click)="navigateToDeviceForm('edit', device.id)" class="edit-button">EDIT</button>
+        <button (click)="deleteDevice(device.id)" class="delete-button">DELETE</button>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<app-navbar></app-navbar>
+</body>
+</html>

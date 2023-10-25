@@ -73,23 +73,19 @@ th {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Button Hover Effect */
 .edit-button:hover, .delete-button:hover, .add-button:hover {
   background-color: rgba(0, 79, 103, 0.75);
 }
 
-/* Center the Action Buttons */
 td > .edit-button, td > .delete-button, .add-button {
   display: block;
   margin: 0 auto;
 }
 
-/* Center the table */
 table {
   margin: 0 auto;
 }
 
-/* Responsive Table Styles (for smaller screens) */
 @media (max-width: 600px) {
   table {
     width: 100%;

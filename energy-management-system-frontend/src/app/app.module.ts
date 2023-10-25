@@ -15,6 +15,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {UserDialogService} from "./services/user-dialog.service";
 import { EditUserComponent } from './components/user-options/edit-user/edit-user.component';
 import { DeviceOptionsComponent } from './components/device-options/device-options.component';
+import { AddDeviceComponent } from './components/device-options/add-device/add-device.component';
+import { EditDeviceComponent } from './components/device-options/edit-device/edit-device.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { DeviceOptionsComponent } from './components/device-options/device-optio
     AddUserComponent,
     EditUserComponent,
     DeviceOptionsComponent,
+    AddDeviceComponent,
+    EditDeviceComponent,
   ],
   imports: [
     BrowserModule,
