@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css']
+  selector: 'app-edit-user',
+  templateUrl: './edit-user.component.html',
+  styleUrls: ['./edit-user.component.css']
 })
-export class AddUserComponent implements OnInit {
-
+export class EditUserComponent {
   userForm: FormGroup;
 
   isNameError: boolean;
@@ -21,7 +20,7 @@ export class AddUserComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<AddUserComponent>
+    private dialogRef: MatDialogRef<EditUserComponent>
   ) {
     this.userForm = this.formBuilder.group({
       name: ['', Validators.required],

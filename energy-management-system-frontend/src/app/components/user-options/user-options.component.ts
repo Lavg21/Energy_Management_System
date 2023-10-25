@@ -14,38 +14,25 @@ export class UserOptionsComponent {
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: "user" },
   ];
 
-  // constructor(private router: Router, private userDialogService: UserDialogService) {}
-  //
-  // navigateToUserForm(action: string, userId?: number) {
-  //   if (action === 'add') {
-  //     // Open the user popup
-  //     this.userDialogService.openUserPopup().afterClosed().subscribe(result => {
-  //       // Handle the result if needed (e.g., result could contain user data)
-  //       if (result) {
-  //         console.log('User added:', result);
-  //         // You can also save the new user data to your users array
-  //       }
-  //     });
-  //   } else if (action === 'edit' && userId) {
-  //     // Open the edit popup
-  //     console.log("Edit button was pressed!");
-  //   }
-  // }
-
-  //constructor(private router: Router) {}
-  constructor(private router: Router, private userDialogService: UserDialogService) {}
+  constructor(private router: Router, private userDialogService: UserDialogService) {
+    // this.users = this.userService.getAllUsers();
+  }
 
   navigateToUserForm(action: string, userId?: number) {
     if (action === 'add') {
-      this.userDialogService.openUserPopup().afterClosed().subscribe(result => {
-        // Handle the result if needed (e.g., result could contain user data)
+
+      this.userDialogService.openAddUserPopup().afterClosed().subscribe(result => {
         if (result) {
           console.log('User added:', result);
-          // You can also save the new user data to your users array
         }
       });
     } else if (action === 'edit' && userId) {
-      // Open edit popup
+
+      this.userDialogService.openEditUserPopup().afterClosed().subscribe(result => {
+        if (result) {
+          console.log('User edited:', result);
+        }
+      });
       console.log("Edit button was pressed!");
     }
   }

@@ -9,15 +9,12 @@ import {HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminMenuComponent} from './components/admin-menu/admin-menu.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
-// <<<<<<< Updated upstream
-// import {UserOptionsComponent} from "./components/user-options/user-options.component";
-// import { AddUserComponent } from './components/add-user/add-user.component';
-// import {MatDialogModule} from "@angular/material/dialog";
-// =======
 import {UserOptionsComponent} from './components/user-options/user-options.component';
 import {AddUserComponent} from './components/user-options/add-user/add-user.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {UserDialogService} from "./services/user-dialog.service";
+import { EditUserComponent } from './components/user-options/edit-user/edit-user.component';
+import { DeviceOptionsComponent } from './components/device-options/device-options.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +24,8 @@ import {UserDialogService} from "./services/user-dialog.service";
     NavbarComponent,
     UserOptionsComponent,
     AddUserComponent,
+    EditUserComponent,
+    DeviceOptionsComponent,
   ],
   imports: [
     BrowserModule,
