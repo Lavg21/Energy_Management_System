@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {DeviceDialogService} from "../../services/device-dialog.service";
 
@@ -20,22 +20,9 @@ export class MappingOptionsComponent {
   }
 
   navigateToMapping(action: string, userId?: number) {
-   /* if (action === 'add') {
-
-      this.deviceDialogService.openAddDevicePopup().afterClosed().subscribe(result => {
-        if (result) {
-          console.log('Device added:', result);
-        }
-      });
-    } else if (action === 'edit' && userId) {
-
-      this.deviceDialogService.openEditDevicePopup().afterClosed().subscribe(result => {
-        if (result) {
-          console.log('Device edited:', result);
-        }
-      });
-      console.log("Edit button was pressed!");
-    }*/
+    if (action === 'add') {
+      this.router.navigate(['/add-mapping']);
+    }
   }
 
   deleteMapping(mappingId: number) {

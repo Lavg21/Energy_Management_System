@@ -1,0 +1,41 @@
+<html>
+<body>
+<h1>Mapping Users to Devices</h1>
+<div class="tables-container">
+  <table class="user-table">
+    <thead>
+    <tr>
+      <th>User Name</th>
+      <th>Email Address</th>
+      <th>Select</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td><input type="checkbox" [value]="user" [(ngModel)]="user.checked" name="users"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="device-table">
+    <thead>
+    <tr>
+      <th>Device Description</th>
+      <th>Device Address</th>
+      <th>Select</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let device of devices">
+      <td>{{ device.description }}</td>
+      <td>{{ device.address }}</td>
+      <td><input type="checkbox" [value]="device" [(ngModel)]="device.checked" name="devices"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<button (click)="addMapping()">Add Mapping</button>
+</body>
+</html>

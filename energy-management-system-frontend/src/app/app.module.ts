@@ -18,6 +18,7 @@ import { DeviceOptionsComponent } from './components/device-options/device-optio
 import { AddDeviceComponent } from './components/device-options/add-device/add-device.component';
 import { EditDeviceComponent } from './components/device-options/edit-device/edit-device.component';
 import { MappingOptionsComponent } from './components/mapping-options/mapping-options.component';
+import { AddMappingComponent } from './components/mapping-options/add-mapping/add-mapping.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MappingOptionsComponent } from './components/mapping-options/mapping-op
     AddDeviceComponent,
     EditDeviceComponent,
     MappingOptionsComponent,
+    AddMappingComponent,
   ],
   imports: [
     BrowserModule,

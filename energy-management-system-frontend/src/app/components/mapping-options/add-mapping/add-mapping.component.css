@@ -1,0 +1,19 @@
+.tables-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+table {
+  border-collapse: collapse;
+  width: 48%; /* Adjust the width as needed */
+  margin: 5px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+}
