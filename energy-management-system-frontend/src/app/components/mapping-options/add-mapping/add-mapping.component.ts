@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-add-mapping',
@@ -7,13 +7,13 @@ import { Component } from '@angular/core';
 })
 export class AddMappingComponent {
   users = [
-    { name: 'Lavinia', email: 'lavi@example.com', checked: false },
-    { name: 'Lavi', email: 'laviniaa@example.com', checked: false },
+    {name: 'Lavinia', email: 'lavi@example.com', checked: false},
+    {name: 'Lavi', email: 'laviniaa@example.com', checked: false},
   ];
 
   devices = [
-    { description: 'Device 1', address: 'Cluj-Napoca', checked: false },
-    { description: 'Device 2', address: 'Suceava', checked: false },
+    {description: 'Device 1', address: 'Cluj-Napoca', checked: false},
+    {description: 'Device 2', address: 'Suceava', checked: false},
   ];
 
   addMapping() {

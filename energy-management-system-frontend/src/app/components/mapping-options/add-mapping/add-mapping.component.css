@@ -1,12 +1,17 @@
 .tables-container {
   display: flex;
   justify-content: space-between;
+  width: 60%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: 20%;
 }
 
 table {
   border-collapse: collapse;
-  width: 48%; /* Adjust the width as needed */
+  width: 48%;
   margin: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 table, th, td {
@@ -16,4 +21,92 @@ table, th, td {
 th, td {
   padding: 8px;
   text-align: center;
+  border: 1px solid #ccc;
+  background-color: rgba(93, 167, 190, 0.46);
+}
+
+th {
+  background-color: rgba(0, 79, 103, 0.75);
+}
+
+html, body, * {
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  background-color: #bdbcbc;
+}
+
+app-navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 96%;
+  width: 7%;
+  background-color: #004f67;
+  color: white;
+  padding: 1%;
+  text-align: center;
+  z-index: 2;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 1%;
+  font-size: 3rem;
+  padding-bottom: 2%;
+  padding-top: 1%;
+  color: #333;
+}
+
+/*table {*/
+/*  width: 60%;*/
+/*  border-collapse: collapse;*/
+/*  margin-top: 20px;*/
+/*  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*th, td {*/
+/*  border: 1px solid #ccc;*/
+/*  padding: 8px;*/
+/*  text-align: center;*/
+/*  background-color: rgba(93, 167, 190, 0.46);*/
+/*}*/
+
+.add-button {
+  background-color: rgba(1, 114, 155, 0.68);
+  color: black;
+  border: none;
+  padding: 1%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: absolute;
+  top: 3%;
+  right: 2%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+table {
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  table {
+    width: 100%;
+  }
+
+  th, td {
+    display: block;
+    width: 100%;
+  }
+
+  td {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }
