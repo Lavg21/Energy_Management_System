@@ -1,7 +1,10 @@
 package com.ems.emsuser.service;
 
+import com.ems.emsuser.domain.dto.UserAvailableDTO;
 import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
+import com.ems.emsuser.exception.ClientException;
+import com.ems.emsuser.exception.ClientServerException;
 import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.repository.UserRepository;
@@ -9,8 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +44,11 @@ public class UserService {
 
         user.setPassword(generateAndEncodePassword());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        insertIntoAvailableUsers(savedUser.getId());
+
+        return savedUser;
     }
 
     private String generateAndEncodePassword() {
@@ -86,7 +97,46 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found!"));
 
+        updateAvailableUsersAfterDelete(id);
+
         userRepository.delete(user);
+    }
+
+    private void insertIntoAvailableUsers(Integer userID) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        UserAvailableDTO userAvailableDTO = new UserAvailableDTO(userID);
+        HttpEntity<UserAvailableDTO> httpEntity = new HttpEntity<>(userAvailableDTO, httpHeaders);
+
+        try {
+            ResponseEntity<?> responseEntity = restTemplate.exchange("http://localhost:8081/userAvailable/",
+                    HttpMethod.POST, httpEntity, Object.class);
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+                throw new ClientException("The user could not be inserted!");
+            }
+        } catch (HttpServerErrorException exception) {
+            throw new ClientServerException("An unexpected error occurred when trying to insert an user!");
+        }
+    }
+
+    private void updateAvailableUsersAfterDelete(Integer userID) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
+
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8081/userAvailable/"
+                    + userID, HttpMethod.DELETE, httpEntity, String.class);
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+                throw new ClientException("The user could not be deleted!");
+            }
+        } catch (HttpServerErrorException exception) {
+            throw new ClientServerException("An unexpected error occurred when trying to insert an user!");
+        }
     }
 
 }

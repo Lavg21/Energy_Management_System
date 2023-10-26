@@ -2,6 +2,7 @@ package com.ems.emsuser.controller;
 
 import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
+import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,8 @@ public class UserController {
                     .status(HttpStatus.CREATED)
                     .body(createdUserDTO);
         } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        } catch (DuplicateEmailException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }

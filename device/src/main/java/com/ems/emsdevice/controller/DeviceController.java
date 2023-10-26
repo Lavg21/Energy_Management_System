@@ -24,15 +24,8 @@ public class DeviceController {
 
     @PostMapping
     public ResponseEntity<?> createDevice(@RequestBody DeviceDTO deviceDTO) {
-
         try {
-            Device device = Device.builder()
-                    .address(deviceDTO.getAddress())
-                    .description(deviceDTO.getDescription())
-                    .consumption(deviceDTO.getConsumption())
-                    .build();
-
-            Device createdDevice = deviceService.createDevice(device);
+            Device createdDevice = deviceService.createDevice(deviceDTO);
 
             DeviceDTO createdDeviceDTO = DeviceDTO.builder()
                     .id(createdDevice.getId())
@@ -49,7 +42,6 @@ public class DeviceController {
 
     @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
-
         List<Device> devices = deviceService.getAllDevices();
 
         if (devices != null && !devices.isEmpty()) {
@@ -89,7 +81,6 @@ public class DeviceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DeviceDTO> updateDevice(@PathVariable Integer id, @RequestBody DeviceDTO deviceDTO) {
-
         try {
             DeviceDTO updatedDeviceDTO = deviceService.updateDevice(id, deviceDTO);
 
@@ -101,7 +92,6 @@ public class DeviceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDevice(@PathVariable Integer id) {
-
         Device device = deviceService.findDeviceById(id);
 
         if (device != null) {

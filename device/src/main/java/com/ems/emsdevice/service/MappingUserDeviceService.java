@@ -5,7 +5,7 @@ import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.domain.entity.MappingUserDevice;
 import com.ems.emsdevice.exception.ClientException;
 import com.ems.emsdevice.exception.ClientStatusException;
-import com.ems.emsdevice.exception.MappingNotFoundException;
+import com.ems.emsdevice.exception.UserAvailableNotFoundException;
 import com.ems.emsdevice.repository.MappingUserDeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class MappingUserDeviceService {
 
         MappingUserDevice mappingUserDevice = mappingUserDeviceRepository
                 .findById(id)
-                .orElseThrow(() -> new MappingNotFoundException("Mapping with ID " + id + " not found"));
+                .orElseThrow(() -> new UserAvailableNotFoundException("Mapping with ID " + id + " not found"));
 
         mappingUserDeviceRepository.delete(mappingUserDevice);
     }
