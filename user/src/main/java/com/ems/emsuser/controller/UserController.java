@@ -4,6 +4,7 @@ import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
 import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
+import com.ems.emsuser.security.JwtAuthorizationFilter;
 import com.ems.emsuser.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-
         try {
             User user = User.builder()
                     .name(userDTO.getName())
@@ -47,16 +47,13 @@ public class UserController {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(createdUserDTO);
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-        } catch (DuplicateEmailException exception) {
+        } catch (IllegalArgumentException | DuplicateEmailException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-
         List<User> users = userService.getAllUsers();
         if (users != null && !users.isEmpty()) {
             List<UserDTO> userDTOs = users.stream()
@@ -74,8 +71,27 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<UserDTO> getUserByToken(@RequestHeader("Authorization") String token) {
+        User user = userService.findUserById(JwtAuthorizationFilter.getUserIdFromJwt(token));
+
+        if (user != null) {
+
+            UserDTO userDTO = UserDTO.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .admin(user.isAdmin())
+                    .build();
+
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> findUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
         User user = userService.findUserById(id);
 
         if (user != null) {
@@ -95,7 +111,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
-
         try {
             UserDTO updatedUserDTO = userService.updateUser(id, userDTO);
             return ResponseEntity.ok(updatedUserDTO);
@@ -105,14 +120,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
 
-        User user = userService.findUserById(id);
-
-        if (user != null) {
+        try {
             userService.deleteUser(id);
+
             return ResponseEntity.ok("User with ID " + id + " has been deleted");
-        } else {
+        } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

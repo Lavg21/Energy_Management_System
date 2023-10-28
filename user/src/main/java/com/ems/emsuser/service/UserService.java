@@ -78,7 +78,6 @@ public class UserService {
 
         existingUser.setName(userDTO.getName());
         existingUser.setEmail(userDTO.getEmail());
-        existingUser.setPassword(userDTO.getPassword());
         existingUser.setAdmin(userDTO.isAdmin());
 
         User updatedUser = userRepository.save(existingUser);
@@ -87,7 +86,6 @@ public class UserService {
                 .id(updatedUser.getId())
                 .name(updatedUser.getName())
                 .email(updatedUser.getEmail())
-                .password(updatedUser.getPassword())
                 .admin(updatedUser.isAdmin())
                 .build();
     }
