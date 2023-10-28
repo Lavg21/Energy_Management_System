@@ -1,0 +1,10 @@
+services:
+  web:
+    build:
+      context: energy-management-system-frontend
+      target: builder
+    ports:
+      - 4200:4200
+    volumes:
+      - ./energy-management-system-frontend:/project
+      - /project/node_modules
