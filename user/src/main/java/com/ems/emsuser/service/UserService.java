@@ -11,6 +11,7 @@ import com.ems.emsuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(13);
+
+    @Value("${device.container.name}")
+    private String deviceContainerName;
 
     public User createUser(User user) {
         if (StringUtils.isBlank(user.getName()) || StringUtils.isBlank(user.getEmail()) || StringUtils.isBlank(user.getPassword()))
@@ -104,8 +108,8 @@ public class UserService {
         HttpEntity<UserAvailableDTO> httpEntity = new HttpEntity<>(userAvailableDTO, httpHeaders);
 
         try {
-            ResponseEntity<?> responseEntity = restTemplate.exchange("http://localhost:8081/userAvailable/",
-                    HttpMethod.POST, httpEntity, Object.class);
+            String url = "http://" + deviceContainerName + ":8081/userAvailable";
+            ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Object.class);
         } catch (HttpClientErrorException exception) {
             if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new ClientException("The user could not be inserted!");
@@ -122,8 +126,8 @@ public class UserService {
         HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
 
         try {
-            ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8081/userAvailable/"
-                    + userID, HttpMethod.DELETE, httpEntity, String.class);
+            String url = "http://" + deviceContainerName + ":8081/userAvailable/";
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url + userID, HttpMethod.DELETE, httpEntity, String.class);
         } catch (HttpClientErrorException exception) {
             if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new ClientException("The user could not be deleted!");
