@@ -9,7 +9,6 @@ import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
 import com.ems.emsuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -32,7 +31,6 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(13);
 
     public User createUser(User user) {
-
         if (StringUtils.isBlank(user.getName()) || StringUtils.isBlank(user.getEmail()) || StringUtils.isBlank(user.getPassword()))
             throw new IllegalArgumentException("Invalid data for user!");
 
@@ -42,7 +40,7 @@ public class UserService {
             throw new DuplicateEmailException("Email address is already in use!");
         }
 
-        user.setPassword(generateAndEncodePassword());
+        user.setPassword(encodePassword(user.getPassword()));
 
         User savedUser = userRepository.save(user);
 
@@ -51,9 +49,7 @@ public class UserService {
         return savedUser;
     }
 
-    private String generateAndEncodePassword() {
-        String password = RandomStringUtils.random(10, true, true);
-
+    private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 

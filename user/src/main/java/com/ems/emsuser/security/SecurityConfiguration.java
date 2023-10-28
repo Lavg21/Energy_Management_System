@@ -75,9 +75,8 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.POST, "/user").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/user/**").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/user/**").hasRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.GET, "/user").hasRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/user").hasAnyRole(Role.ADMIN.name(), Role.CLIENT.name())
                 .antMatchers(HttpMethod.GET, "/user/**").hasRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.GET, "/test/client").hasRole(Role.CLIENT.name())
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptions) -> exceptions
