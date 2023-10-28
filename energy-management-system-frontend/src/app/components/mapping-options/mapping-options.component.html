@@ -6,6 +6,7 @@
   <thead>
   <tr>
     <th>User</th>
+    <th>Email</th>
     <th>Device</th>
     <th>Address</th>
     <th>Actions</th>
@@ -13,12 +14,13 @@
   </thead>
   <tbody>
   <tr *ngFor="let mapping of mappings">
-    <td>{{ mapping.user }}</td>
-    <td>{{ mapping.device }}</td>
-    <td>{{ mapping.address }}</td>
+    <td>{{ mapping.name}}</td>
+    <td>{{ mapping.email }}</td>
+    <td>{{ mapping.deviceDescription }}</td>
+    <td>{{ mapping.deviceAddress }}</td>
     <td>
       <div class="action-buttons">
-        <button (click)="deleteMapping(mapping.id)" class="delete-button">DELETE</button>
+        <button (click)="deleteMapping(mapping.deviceID)" class="delete-button">DELETE</button>
       </div>
     </td>
   </tr>

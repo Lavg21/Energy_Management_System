@@ -1,10 +1,14 @@
 export class MappingModel {
 
-  userId!: number;
-  deviceId!: number;
+  userID!: number;
+  deviceID!: number;
+  name!: string
+  email!: string;
+  deviceDescription!: string;
+  deviceAddress!: string;
 
-  constructor(userId: number, deviceId: number) {
-    this.userId = userId;
-    this.deviceId = deviceId;
+  constructor(userID: number, deviceID: number) {
+    this.userID = userID;
+    this.deviceID = deviceID;
   }
 }

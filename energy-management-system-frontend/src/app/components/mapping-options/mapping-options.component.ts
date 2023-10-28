@@ -1,22 +1,34 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {DeviceDialogService} from "../../services/device-dialog.service";
+import {DeviceService} from "../../services/device-service";
+import {UserService} from "../../services/user-service";
+import {MappingModel} from "../../models/mapping.model";
 
 @Component({
   selector: 'app-mapping-options',
   templateUrl: './mapping-options.component.html',
   styleUrls: ['./mapping-options.component.css']
 })
-export class MappingOptionsComponent {
+export class MappingOptionsComponent implements OnInit {
 
-  mappings: any[] = [
-    {id: 1, user: 'User 1', device: "Device 1", address: 'Cluj-Napoca'},
-    {id: 1, user: 'User 2', device: "Device 1", address: 'Suceava'},
-    {id: 1, user: 'User 3', device: "Device 2", address: 'Constanta'}
-  ]
+  mappings!: MappingModel[];
 
-  constructor(private router: Router) {
-    // this.devices = this.deviceService.getAllDevices();
+  constructor(private router: Router, private deviceService: DeviceService, private userService: UserService) {
+  }
+
+  ngOnInit() {
+    this.deviceService.getAllMappings().subscribe(data => {
+      console.log(data.body);
+      this.mappings = data.body;
+
+      for (let i = 0; i < this.mappings.length; i++) {
+        this.getNameAndEmailAddressForUser(this.mappings[i].userID, i);
+        this.getDeviceDescriptionAndAddressForDevice(this.mappings[i].deviceID, i);
+      }
+    }, error => {
+      console.log(error);
+      alert("Error occurred when getting all mappings!");
+    });
   }
 
   navigateToMapping(action: string, userId?: number) {
@@ -25,11 +37,32 @@ export class MappingOptionsComponent {
     }
   }
 
-  deleteMapping(mappingId: number) {
+  deleteMapping(deviceId: number) {
     if (confirm('Are you sure you want to delete this user?')) {
-      this.mappings = this.mappings.filter(mapping => mapping.id !== mappingId);
-      console.log("Delete button was pressed!");
+      // this.mappings = this.mappings.filter(mapping => mapping.id !== mappingId);
+      // console.log("Delete button was pressed!");
     }
   }
 
+  getNameAndEmailAddressForUser(userId: number, index: number) {
+    this.userService.getUserById(userId).subscribe(data => {
+      console.log(data.body);
+      this.mappings[index].name = data.body.name;
+      this.mappings[index].email = data.body.email;
+    }, error => {
+      console.log(error);
+      alert("Error while getting user with ID: " + userId);
+    });
+  }
+
+  getDeviceDescriptionAndAddressForDevice(deviceId: number, index: number) {
+    this.deviceService.getDeviceById(deviceId).subscribe(data => {
+      console.log(data.body);
+      this.mappings[index].deviceDescription = data.body.description;
+      this.mappings[index].deviceAddress = data.body.address;
+    }, error => {
+      console.log(error);
+      alert("Error while getting device with ID: " + deviceId);
+    });
+  }
 }
