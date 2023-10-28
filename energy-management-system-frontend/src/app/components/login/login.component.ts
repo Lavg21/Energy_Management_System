@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {JWTPayload, UserService} from "../../services/user-service";
+import {Router} from "@angular/router";
+import jwtDecode from "jwt-decode";
 
 @Component({
   selector: 'app-login',
@@ -12,7 +15,9 @@ export class LoginComponent implements OnInit {
   isEmailError: boolean;
   isPasswordError: boolean;
 
-  constructor(private formBuilder: FormBuilder) {
+  responseError = null;
+
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -44,8 +49,20 @@ export class LoginComponent implements OnInit {
       console.log('Email:', email);
       console.log('Password:', password);
 
-      console.log("SUCCESSFULLY ADDED!");
-      // redirect user to next page
+      this.userService.login(email, password).subscribe(() => {
+          this.responseError = null;
+          const token = localStorage.getItem("token");
+          const payload = jwtDecode(token!) as JWTPayload;
+
+          if (payload.scope === "ROLE_ADMIN") {
+            this.router.navigate(["/admin-menu"]);
+          }
+        },
+        error => {
+          this.responseError = error.error;
+          console.log(this.responseError);
+        });
+      this.loginForm.reset();
     }
   }
 

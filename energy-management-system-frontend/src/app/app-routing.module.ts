@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from "./components/login/login.component";
 import {AdminMenuComponent} from "./components/admin-menu/admin-menu.component";
 import {UserOptionsComponent} from "./components/user-options/user-options.component";
 import {DeviceOptionsComponent} from "./components/device-options/device-options.component";
 import {MappingOptionsComponent} from "./components/mapping-options/mapping-options.component";
 import {AddMappingComponent} from "./components/mapping-options/add-mapping/add-mapping.component";
+import {AuthGuard} from "./components/login/auth.guard";
 
 const routes: Routes = [
   {
@@ -14,23 +15,28 @@ const routes: Routes = [
   },
   {
     path: 'admin-menu',
-    component: AdminMenuComponent
+    component: AdminMenuComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'user-options',
-    component: UserOptionsComponent
+    component: UserOptionsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'device-options',
-    component: DeviceOptionsComponent
+    component: DeviceOptionsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'mapping-options',
-    component: MappingOptionsComponent
+    component: MappingOptionsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: "add-mapping",
-    component: AddMappingComponent
+    component: AddMappingComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
@@ -38,6 +44,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
 
-export const RoutingComponents = [LoginComponent, UserOptionsComponent];
+export const RoutingComponents = [LoginComponent, UserOptionsComponent, MappingOptionsComponent, AddMappingComponent];

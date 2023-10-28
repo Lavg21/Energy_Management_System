@@ -4,7 +4,8 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" id="name" formControlName="name" placeholder="Enter name" autocomplete="name">
+    <input type="text" id="name" [(ngModel)]="nameModel" formControlName="name" placeholder="Enter name"
+           autocomplete="name" required>
     <div *ngIf="isNameError"
          class="error-message">Invalid name!
     </div>
@@ -12,7 +13,8 @@
 
   <div class="form-group">
     <label for="email">Email</label>
-    <input type="email" id="email" formControlName="email" placeholder="Enter email" autocomplete="email">
+    <input type="email" id="email" [(ngModel)]="emailModel" formControlName="email" placeholder="Enter email"
+           autocomplete="email" required>
     <div *ngIf="isEmailError"
          class="error-message">Invalid email address!
     </div>
@@ -20,7 +22,8 @@
 
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" id="password" formControlName="password" placeholder="Enter password">
+    <input type="password" id="password" [(ngModel)]="passwordModel" formControlName="password"
+           placeholder="Enter password" required>
     <div *ngIf="isPasswordError"
          class="error-message">Invalid password!
     </div>
@@ -28,7 +31,7 @@
 
   <div class="form-group">
     <label for="role">Role</label>
-    <input type="text" id="role" formControlName="role" placeholder="Enter role">
+    <input type="text" id="role" [(ngModel)]="roleModel" formControlName="role" placeholder="Enter role" required>
     <div *ngIf="isRoleError"
          class="error-message">Invalid role! Must be either Admin or Client.
     </div>

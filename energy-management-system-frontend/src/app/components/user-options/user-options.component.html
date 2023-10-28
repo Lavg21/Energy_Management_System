@@ -1,7 +1,8 @@
 <html>
 <body>
 <h2>Users Management</h2>
-<button (click)="navigateToUserForm('add')" class="add-button">ADD USER</button>
+<div class="tables-container">
+  <button (click)="navigateToUserForm('add')" class="add-button">ADD USER</button>
 <table>
   <thead>
   <tr>
@@ -25,6 +26,7 @@
   </tr>
   </tbody>
 </table>
-<app-navbar></app-navbar>
+</div>
 </body>
+<app-navbar></app-navbar>
 </html>

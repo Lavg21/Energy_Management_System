@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
+import {UserService} from "../../../services/user-service";
+import {AddUserModel} from "../../../models/add-user.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-user',
@@ -11,17 +14,22 @@ export class AddUserComponent implements OnInit {
 
   userForm: FormGroup;
 
+  nameModel: string = "";
+  emailModel: string = "";
+  passwordModel: string = "";
+  roleModel: string = "";
+
   isNameError: boolean;
-
   isEmailError: boolean;
-
   isPasswordError: boolean;
-
   isRoleError: boolean;
+
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<AddUserComponent>
+    private dialogRef: MatDialogRef<AddUserComponent>,
+    private userService: UserService,
+    private router: Router
   ) {
     this.userForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -72,9 +80,36 @@ export class AddUserComponent implements OnInit {
     console.log('Password:', password);
     console.log('Role:', role);
 
+    let addUserModel: AddUserModel = {
+      name: this.nameModel,
+      email: this.emailModel,
+      password: this.passwordModel,
+      role: this.roleModel
+    };
+
     if (!this.isNameError && !this.isEmailError && !this.isPasswordError && !this.isRoleError) {
+      this.userService.addUser(addUserModel).subscribe(data => {
+        if (data.status == 201) {
+          alert("User successfully added!");
+
+          this.reloadCurrentRoute();
+        }
+      }, error => {
+        if (error.status == 404) {
+          alert("The user could not be added!");
+        }
+      });
+
       console.log("SUCCESSFULLY ADDED!");
       this.dialogRef.close(this.userForm.value);
     }
   }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
 }

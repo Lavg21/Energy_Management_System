@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserDialogService} from "../../services/user-dialog.service";
+import {UserModel} from "../../models/user.model";
+import {UserService} from "../../services/user-service";
 
 @Component({
   selector: 'app-user-options',
@@ -9,13 +11,17 @@ import {UserDialogService} from "../../services/user-dialog.service";
 })
 export class UserOptionsComponent {
 
-  users: any[] = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: "admin" },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: "user" },
-  ];
+  users!: UserModel[];
 
-  constructor(private router: Router, private userDialogService: UserDialogService) {
-    // this.users = this.userService.getAllUsers();
+  constructor(private router: Router, private userDialogService: UserDialogService, private userService: UserService) {
+    this.userService.getAllUsers().subscribe((data) => {
+      this.users = [];
+      for (let i = 0; i < data.body.length; i++) {
+        this.users.push(this.bodyToModel(data.body[i]));
+      }
+    }, error => {
+      alert(error);
+    });
   }
 
   navigateToUserForm(action: string, userId?: number) {
@@ -28,7 +34,7 @@ export class UserOptionsComponent {
       });
     } else if (action === 'edit' && userId) {
 
-      this.userDialogService.openEditUserPopup().afterClosed().subscribe(result => {
+      this.userDialogService.openEditUserPopup(userId).afterClosed().subscribe(result => {
         if (result) {
           console.log('User edited:', result);
         }
@@ -38,9 +44,33 @@ export class UserOptionsComponent {
   }
 
   deleteUser(userId: number) {
+    console.log(userId);
     if (confirm('Are you sure you want to delete this user?')) {
-      this.users = this.users.filter(user => user.id !== userId);
+      this.userService.deleteUser(userId).subscribe((data) => {
+        alert("User successfully deleted!");
+        this.reloadCurrentRoute();
+      }, (error) => {
+        console.log(error);
+        console.log("ERROR STATUS:");
+        console.log(error.status);
+        alert("ERROR WHEN DELETING USER!");
+      });
       console.log("Delete button was pressed!");
+    }
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
+  private bodyToModel(body: any) {
+    if (body.admin) {
+      return new UserModel(body.id, body.name, body.email, body.password, "ROLE_ADMIN");
+    } else {
+      return new UserModel(body.id, body.name, body.email, body.password, "ROLE_CLIENT");
     }
   }
 

@@ -30,6 +30,7 @@ table {
   width: 60%;
   border-collapse: collapse;
   margin-top: 20px;
+  margin-left: 22%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -80,34 +81,4 @@ th {
 td > .edit-button, td > .delete-button, .add-button {
   display: block;
   margin: 0 auto;
-}
-
-table {
-  margin: 0 auto;
-}
-
-@media (max-width: 600px) {
-  table {
-    width: 100%;
-  }
-
-  th, td {
-    display: block;
-    width: 100%;
-  }
-
-  td {
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .edit-button, .delete-button, .add-button {
-    margin-top: 10px;
-  }
 }
