@@ -35,6 +35,17 @@ export class DeviceService {
     });
   }
 
+  getDevicesForUser(id: number) {
+    let url: string = this.devicesUrl + "/user/" + id;
+
+    return this.httpClient.get<HttpResponse<any>>(url, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      observe: "response" as "body"
+    });
+  }
+
   getAllDevices() {
     let url: string = this.devicesUrl;
 

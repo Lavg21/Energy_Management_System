@@ -7,12 +7,16 @@ import {DeviceOptionsComponent} from "./components/device-options/device-options
 import {MappingOptionsComponent} from "./components/mapping-options/mapping-options.component";
 import {AddMappingComponent} from "./components/mapping-options/add-mapping/add-mapping.component";
 import {AuthGuard} from "./components/login/auth.guard";
+import {UserDevicesComponent} from "./components/user-devices/user-devices.component";
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
   },
+  { path: '',
+    redirectTo: '/login',
+    pathMatch: 'full' },
   {
     path: 'admin-menu',
     component: AdminMenuComponent,
@@ -37,6 +41,11 @@ const routes: Routes = [
     path: "add-mapping",
     component: AddMappingComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: "devices",
+    component: UserDevicesComponent,
+    // canActivate: [AuthGuard]
   }
 ];
 

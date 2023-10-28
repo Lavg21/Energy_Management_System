@@ -1,0 +1,65 @@
+html, body, * {
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  background-color: #bdbcbc;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 1%;
+  font-size: 3rem;
+  padding-bottom: 2%;
+  padding-top: 1%;
+  color: #333;
+}
+
+table {
+  width: 60%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  background-color: rgba(93, 167, 190, 0.46);
+}
+
+th {
+  background-color: rgba(0, 79, 103, 0.75);
+}
+
+td > .edit-button, td > .delete-button, .add-button {
+  display: block;
+  margin: 0 auto;
+}
+
+table {
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  table {
+    width: 100%;
+  }
+
+  th, td {
+    display: block;
+    width: 100%;
+  }
+
+  td {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+}

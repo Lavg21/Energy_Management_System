@@ -1,0 +1,21 @@
+<html>
+<body>
+<h2>My devices</h2>
+<table>
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Address</th>
+    <th>Consumption</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let device of devices">
+    <td>{{ device.description }}</td>
+    <td>{{ device.address }}</td>
+    <td>{{ device.consumption }}</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
