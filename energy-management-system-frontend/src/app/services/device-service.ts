@@ -78,7 +78,7 @@ export class DeviceService {
     });
   }
 
-  deletedevice(id: number) {
+  deleteDevice(id: number) {
     let url: string = this.devicesUrl + "/" + id;
 
     return this.httpClient.delete<HttpResponse<string>>(url, {
@@ -110,6 +110,17 @@ export class DeviceService {
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
+    });
+  }
+
+  deleteMapping(id: number) {
+    let url: string = this.devicesUrl + "/mapping/" + id;
+
+    return this.httpClient.delete<HttpResponse<string>>(url, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      responseType: "text" as "json"
     });
   }
 

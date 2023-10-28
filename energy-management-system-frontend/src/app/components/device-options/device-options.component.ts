@@ -47,7 +47,7 @@ export class DeviceOptionsComponent {
   deleteDevice(deviceId: number) {
     console.log(deviceId);
     if (confirm('Are you sure you want to delete this user?')) {
-      this.deviceService.deletedevice(deviceId).subscribe((data) => {
+      this.deviceService.deleteDevice(deviceId).subscribe((data) => {
         alert("Device successfully edited!");
 
         this.reloadCurrentRoute();

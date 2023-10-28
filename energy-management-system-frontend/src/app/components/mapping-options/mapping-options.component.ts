@@ -38,9 +38,19 @@ export class MappingOptionsComponent implements OnInit {
   }
 
   deleteMapping(deviceId: number) {
+    console.log(deviceId);
     if (confirm('Are you sure you want to delete this user?')) {
-      // this.mappings = this.mappings.filter(mapping => mapping.id !== mappingId);
-      // console.log("Delete button was pressed!");
+      this.deviceService.deleteMapping(deviceId).subscribe((data) =>{
+        alert("Mapping successfully deleted!");
+
+        this.reloadCurrentRoute();
+      }, (error) => {
+        console.log(error);
+        console.log("ERROR STATUS:");
+        console.log(error.status);
+        alert("ERROR WHEN DELETING MAPPING!");
+      });
+      console.log("Delete button was pressed!");
     }
   }
 
@@ -65,4 +75,12 @@ export class MappingOptionsComponent implements OnInit {
       alert("Error while getting device with ID: " + deviceId);
     });
   }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
 }
