@@ -13,8 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -124,5 +126,21 @@ public class DeviceService {
                     .userAvailable(x.getUserAvailable())
                     .build();
         }).toList();
+    }
+
+    public List<MappingDTO> getAllMappings() {
+        List<Device> deviceList = deviceRepository.findAll();
+        List<MappingDTO> mappingDTOList = new ArrayList<>();
+
+        deviceList.stream()
+                .filter(x -> x.getUserAvailable() != null)
+                .forEach(x -> mappingDTOList.add(new MappingDTO(x.getUserAvailable().getId(), x.getId())));
+
+        return mappingDTOList;
+    }
+
+    public List<Device> getAllUnmappedDevices() {
+        List<Device> deviceList = deviceRepository.findAll();
+        return deviceList.stream().filter(x -> x.getUserAvailable() == null).collect(Collectors.toList());
     }
 }

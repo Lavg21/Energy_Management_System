@@ -7,6 +7,7 @@ import com.ems.emsdevice.exception.DeviceNotFoundException;
 import com.ems.emsdevice.exception.DeviceServiceException;
 import com.ems.emsdevice.service.DeviceService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +66,26 @@ public class DeviceController {
     @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
         List<Device> devices = deviceService.getAllDevices();
+
+        if (devices != null && !devices.isEmpty()) {
+            List<DeviceDTO> deviceDTOs = devices.stream()
+                    .map(device -> DeviceDTO.builder()
+                            .id(device.getId())
+                            .address(device.getAddress())
+                            .description(device.getDescription())
+                            .consumption(device.getConsumption())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(deviceDTOs);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping("/unmapped")
+    public ResponseEntity<List<DeviceDTO>> getAllUnmappedDevices() {
+        List<Device> devices = deviceService.getAllUnmappedDevices();
 
         if (devices != null && !devices.isEmpty()) {
             List<DeviceDTO> deviceDTOs = devices.stream()
@@ -142,6 +163,15 @@ public class DeviceController {
             return ResponseEntity.ok(deviceDTOList);
         } catch (DeviceServiceException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/user/all")
+    public ResponseEntity<?> getAllMappings() {
+        try {
+            return ResponseEntity.ok(deviceService.getAllMappings());
+        } catch (Exception exception) {
+            return ResponseEntity.internalServerError().body("Exception occurred while retrieving all mappings!");
         }
     }
 }
