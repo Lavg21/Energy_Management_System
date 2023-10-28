@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {DeviceService} from "../../../services/device-service";
+import {Router} from "@angular/router";
+import {AddEditDeviceModel} from "../../../models/add-edit-device.model";
 
 @Component({
   selector: 'app-edit-device',
@@ -9,18 +12,29 @@ import {MatDialogRef} from "@angular/material/dialog";
 })
 export class EditDeviceComponent implements OnInit {
 
-
   deviceForm: FormGroup;
 
   isDescriptionError: boolean;
   isAddressError: boolean;
   isConsumptionError: boolean;
 
+  deviceId: number;
+
+  descriptionModel: string = "";
+  addressModel: string = "";
+  consumptionModel: number = 0.0;
+
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<EditDeviceComponent>
+    private dialogRef: MatDialogRef<EditDeviceComponent>,
+    private deviceService: DeviceService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private router: Router
   ) {
+    this.deviceService = deviceService;
+    this.deviceId = data.deviceId;
+
     this.deviceForm = this.formBuilder.group({
       description: ['', Validators.required],
       address: ['', [Validators.required, Validators.email]],
@@ -30,6 +44,18 @@ export class EditDeviceComponent implements OnInit {
     this.isDescriptionError = false;
     this.isAddressError = false;
     this.isConsumptionError = false;
+
+    this.deviceService.getDeviceById(this.deviceId).subscribe(data => {
+      if (data.status == 200) {
+        console.log("GET SUCCESSFUL!");
+
+        this.descriptionModel = data.body.description;
+        this.addressModel = data.body.address;
+        this.consumptionModel = data.body.consumption;
+      }
+    }, error => {
+      alert("ERROR WHEN GETTING DEVICE BY ID!");
+    });
   }
 
   ngOnInit() {
@@ -62,9 +88,26 @@ export class EditDeviceComponent implements OnInit {
     console.log('Consumption:', consumption);
 
     if (!this.isDescriptionError && !this.isAddressError && !this.isConsumptionError) {
+
+      let deviceModel: AddEditDeviceModel = new AddEditDeviceModel(this.descriptionModel, this.addressModel, this.consumptionModel);
+
+      this.deviceService.updateDevice(this.deviceId, deviceModel).subscribe((data) => {
+        alert("Device successfully updated!");
+      }, error => {
+        alert("ERROR WHEN UPDATING DEVICE");
+      });
+
       console.log("SUCCESSFULLY ADDED!");
       this.dialogRef.close(this.deviceForm.value);
+
+      this.reloadCurrentRoute();
     }
   }
 
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
 }

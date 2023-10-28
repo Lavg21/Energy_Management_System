@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {DeviceDialogService} from "../../services/device-dialog.service";
+import {DeviceModel} from "../../models/device.model";
+import {DeviceService} from "../../services/device-service";
 
 @Component({
   selector: 'app-device-options',
@@ -9,16 +11,21 @@ import {DeviceDialogService} from "../../services/device-dialog.service";
 })
 export class DeviceOptionsComponent {
 
-  devices: any[] = [
-    {id: 1, description: 'Device 1', address: 'Cluj-Napoca', consumption: "3"},
-    {id: 2, description: 'Device 2', address: 'Suceava', consumption: "4"},
-  ];
+  devices!: DeviceModel[];
 
-  constructor(private router: Router, private deviceDialogService: DeviceDialogService) {
-    // this.devices = this.deviceService.getAllDevices();
+  constructor(private router: Router, private deviceDialogService: DeviceDialogService, private deviceService: DeviceService) {
+    this.deviceService.getAllDevices().subscribe((data) => {
+      this.devices = [];
+
+      for(let i = 0; i < data.body.length; i++) {
+        this.devices.push(data.body[i]);
+      }
+    }, error => {
+      alert(error);
+    });
   }
 
-  navigateToDeviceForm(action: string, userId?: number) {
+  navigateToDeviceForm(action: string, deviceId?: number) {
     if (action === 'add') {
 
       this.deviceDialogService.openAddDevicePopup().afterClosed().subscribe(result => {
@@ -26,9 +33,9 @@ export class DeviceOptionsComponent {
           console.log('Device added:', result);
         }
       });
-    } else if (action === 'edit' && userId) {
+    } else if (action === 'edit' && deviceId) {
 
-      this.deviceDialogService.openEditDevicePopup().afterClosed().subscribe(result => {
+      this.deviceDialogService.openEditDevicePopup(deviceId).afterClosed().subscribe(result => {
         if (result) {
           console.log('Device edited:', result);
         }
@@ -38,10 +45,28 @@ export class DeviceOptionsComponent {
   }
 
   deleteDevice(deviceId: number) {
+    console.log(deviceId);
     if (confirm('Are you sure you want to delete this user?')) {
-      this.devices = this.devices.filter(device => device.id !== deviceId);
+      this.deviceService.deletedevice(deviceId).subscribe((data) => {
+        alert("Device successfully edited!");
+
+        this.reloadCurrentRoute();
+      }, (error) =>{
+        console.log(error);
+        console.log("ERROR STATUS:");
+        console.log(error.status);
+        alert("ERROR WHEN DELETING DEVICE!");
+      });
+
       console.log("Delete button was pressed!");
     }
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate([currentUrl]);
+    });
   }
 
 }

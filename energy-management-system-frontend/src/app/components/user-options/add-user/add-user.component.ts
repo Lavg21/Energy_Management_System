@@ -74,7 +74,6 @@ export class AddUserComponent implements OnInit {
       this.isRoleError = true;
     }
 
-    // Integrate with the backend
     console.log('Name:', name);
     console.log('Email:', email);
     console.log('Password:', password);

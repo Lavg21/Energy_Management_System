@@ -15,17 +15,13 @@ export class EditUserComponent {
   userForm: FormGroup;
 
   isNameError: boolean;
-
   isEmailError: boolean;
-
   isRoleError: boolean;
 
   userId: number;
 
   nameModel: string = "";
-
   emailModel: string = "";
-
   roleModel: string = "";
 
   constructor(

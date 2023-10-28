@@ -18,10 +18,13 @@ export class DeviceDialogService {
     });
   }
 
-  openEditDevicePopup() {
+  openEditDevicePopup(deviceId: number) {
     return this.dialog.open(EditDeviceComponent, {
       width: '25%',
-      maxHeight: '60vh'
+      maxHeight: '60vh',
+      data: {
+        deviceId: deviceId
+      }
     });
   }
 }

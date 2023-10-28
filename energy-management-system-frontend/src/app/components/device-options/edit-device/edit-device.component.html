@@ -4,7 +4,7 @@
 <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="description">Description</label>
-    <input type="text" id="description" formControlName="description" placeholder="Enter description"
+    <input type="text" id="description" [(ngModel)]="descriptionModel" formControlName="description" placeholder="Enter description"
            autocomplete="description">
     <div *ngIf="isDescriptionError"
          class="error-message">Invalid description!
@@ -13,7 +13,7 @@
 
   <div class="form-group">
     <label for="address">Address</label>
-    <input type="text" id="address" formControlName="address" placeholder="Enter address" autocomplete="address">
+    <input type="text" id="address" [(ngModel)]="addressModel" formControlName="address" placeholder="Enter address" autocomplete="address">
     <div *ngIf="isAddressError"
          class="error-message">Invalid address!
     </div>
@@ -21,7 +21,7 @@
 
   <div class="form-group">
     <label for="consumption">Consumption</label>
-    <input type="text" id="consumption" formControlName="consumption" placeholder="Enter consumption">
+    <input type="text" id="consumption" [(ngModel)]="consumptionModel" formControlName="consumption" placeholder="Enter consumption">
     <div *ngIf="isConsumptionError"
          class="error-message">Invalid consumption!
     </div>
