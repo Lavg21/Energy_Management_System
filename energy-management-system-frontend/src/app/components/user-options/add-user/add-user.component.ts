@@ -94,7 +94,7 @@ export class AddUserComponent implements OnInit {
           this.reloadCurrentRoute();
         }
       }, error => {
-        if (error.status == 404) {
+        if (error.status == 400) {
           alert("The user could not be added!");
         }
       });

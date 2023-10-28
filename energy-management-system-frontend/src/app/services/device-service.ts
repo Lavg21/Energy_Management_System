@@ -46,6 +46,17 @@ export class DeviceService {
     });
   }
 
+  getAllUnmappedDevices() {
+    let url: string = this.devicesUrl + "/unmapped";
+
+    return this.httpClient.get<HttpResponse<any>>(url, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      observe: "response" as "body"
+    });
+  }
+
   addDevice(device: AddEditDeviceModel) {
     let url: string = this.devicesUrl;
 
@@ -92,7 +103,7 @@ export class DeviceService {
   }
 
   addMapping(mapping: MappingModel) {
-    let url: string = this.devicesUrl + "/mappping";
+    let url: string = this.devicesUrl + "/mapping";
 
     return this.httpClient.post<HttpResponse<any>>(url, mapping, {
       headers: {

@@ -17,7 +17,7 @@ export class DeviceOptionsComponent {
     this.deviceService.getAllDevices().subscribe((data) => {
       this.devices = [];
 
-      for(let i = 0; i < data.body.length; i++) {
+      for (let i = 0; i < data.body.length; i++) {
         this.devices.push(data.body[i]);
       }
     }, error => {
@@ -51,7 +51,7 @@ export class DeviceOptionsComponent {
         alert("Device successfully edited!");
 
         this.reloadCurrentRoute();
-      }, (error) =>{
+      }, (error) => {
         console.log(error);
         console.log("ERROR STATUS:");
         console.log(error.status);
