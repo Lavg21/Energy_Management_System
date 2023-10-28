@@ -8,6 +8,7 @@ import {MappingOptionsComponent} from "./components/mapping-options/mapping-opti
 import {AddMappingComponent} from "./components/mapping-options/add-mapping/add-mapping.component";
 import {AuthGuard} from "./components/login/auth.guard";
 import {UserDevicesComponent} from "./components/user-devices/user-devices.component";
+import {AuthClientGuard} from "./components/login/auth-client.guard";
 
 const routes: Routes = [
   {
@@ -45,7 +46,7 @@ const routes: Routes = [
   {
     path: "devices",
     component: UserDevicesComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthClientGuard]
   }
 ];
 
@@ -56,4 +57,4 @@ const routes: Routes = [
 export class AppRoutingModule {
 }
 
-export const RoutingComponents = [LoginComponent, UserOptionsComponent, MappingOptionsComponent, AddMappingComponent];
+export const RoutingComponents = [LoginComponent, UserOptionsComponent, MappingOptionsComponent, AddMappingComponent, UserDevicesComponent];

@@ -56,6 +56,8 @@ export class LoginComponent implements OnInit {
 
           if (payload.scope === "ROLE_ADMIN") {
             this.router.navigate(["/admin-menu"]);
+          } else {
+            this.router.navigate(["/devices"]);
           }
         },
         error => {
