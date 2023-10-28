@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MapppingDTO {
+public class MappingDTO {
 
     private Integer userID;
     private Integer deviceID;

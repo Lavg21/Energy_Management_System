@@ -1,8 +1,10 @@
 package com.ems.emsdevice.controller;
 
 import com.ems.emsdevice.domain.dto.DeviceDTO;
+import com.ems.emsdevice.domain.dto.MappingDTO;
 import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.exception.DeviceNotFoundException;
+import com.ems.emsdevice.exception.DeviceServiceException;
 import com.ems.emsdevice.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,26 @@ public class DeviceController {
         }
     }
 
+    @PostMapping("/mapping")
+    public ResponseEntity<?> createMapping(@RequestBody MappingDTO mappingDTO) {
+        try {
+            Device createdMapping = deviceService.createMapping(mappingDTO);
+
+            DeviceDTO createdMappingDTO = DeviceDTO.builder()
+                    .id(createdMapping.getId())
+                    .address(createdMapping.getAddress())
+                    .description(createdMapping.getDescription())
+                    .consumption(createdMapping.getConsumption())
+                    .userAvailable(createdMapping.getUserAvailable())
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdMappingDTO);
+        } catch (DeviceServiceException exception) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
         List<Device> devices = deviceService.getAllDevices();
@@ -61,7 +83,7 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DeviceDTO> findDeviceById(@PathVariable Integer id) {
+    public ResponseEntity<?> findDeviceById(@PathVariable Integer id) {
         Device device = deviceService.findDeviceById(id);
 
         if (device != null) {
@@ -75,32 +97,51 @@ public class DeviceController {
 
             return ResponseEntity.ok(deviceDTO);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Device with ID %d not found!", id));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DeviceDTO> updateDevice(@PathVariable Integer id, @RequestBody DeviceDTO deviceDTO) {
+    public ResponseEntity<?> updateDevice(@PathVariable Integer id, @RequestBody DeviceDTO deviceDTO) {
         try {
             DeviceDTO updatedDeviceDTO = deviceService.updateDevice(id, deviceDTO);
 
             return ResponseEntity.ok(updatedDeviceDTO);
         } catch (DeviceNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Device with ID %d not found!", id));
+        }
+    }
+
+    @DeleteMapping("/mapping/{deviceId}")
+    public ResponseEntity<?> deleteMapping(@PathVariable Integer deviceId) {
+
+        try {
+            deviceService.deleteMapping(deviceId);
+
+            return ResponseEntity.ok("Mapping for device with ID " + deviceId + " has been deleted!");
+        } catch (DeviceServiceException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDevice(@PathVariable Integer id) {
-        Device device = deviceService.findDeviceById(id);
-
-        if (device != null) {
+        try {
             deviceService.deleteDevice(id);
 
-            return ResponseEntity.ok("Device with ID " + id + " has been deleted");
-        } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("Device with ID " + id + " has been deleted!");
+        } catch (DeviceServiceException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getAllDevicesForUserId(@PathVariable Integer userId) {
+        try {
+            List<DeviceDTO> deviceDTOList = deviceService.getAllDevicesForUserId(userId);
+            return ResponseEntity.ok(deviceDTOList);
+        } catch (DeviceServiceException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        }
+    }
 }

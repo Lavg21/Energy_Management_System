@@ -1,5 +1,6 @@
 package com.ems.emsdevice.domain.dto;
 
+import com.ems.emsdevice.domain.entity.UserAvailable;
 import lombok.*;
 
 @AllArgsConstructor
@@ -13,4 +14,5 @@ public class DeviceDTO {
     private String description;
     private String address;
     private Double consumption;
+    private UserAvailable userAvailable;
 }

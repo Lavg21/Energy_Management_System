@@ -1,17 +1,20 @@
 package com.ems.emsdevice.service;
 
 import com.ems.emsdevice.domain.dto.DeviceDTO;
-import com.ems.emsdevice.domain.dto.MapppingDTO;
+import com.ems.emsdevice.domain.dto.MappingDTO;
 import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.domain.entity.UserAvailable;
 import com.ems.emsdevice.exception.DeviceNotFoundException;
+import com.ems.emsdevice.exception.DeviceServiceException;
 import com.ems.emsdevice.repository.DeviceRepository;
+import com.ems.emsdevice.repository.UserAvailableRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,9 @@ public class DeviceService {
 
     @Autowired
     private final DeviceRepository deviceRepository;
+
+    @Autowired
+    private final UserAvailableRepository userAvailableRepository;
 
     public Device createDevice(DeviceDTO deviceDTO) {
         Device device = Device.builder()
@@ -70,16 +76,53 @@ public class DeviceService {
         deviceRepository.delete(device);
     }
 
-    public void createMapping (MapppingDTO mapppingDTO) {
+    public Device createMapping(MappingDTO mappingDTO) {
+        Device foundDevice = deviceRepository.findById(mappingDTO.getDeviceID()).orElse(null);
 
-        // put this in try catch
-        Device foundDevice = deviceRepository.findById(mapppingDTO.getDeviceID()).orElse(null);
+        Optional<UserAvailable> userAvailableOptional = userAvailableRepository.findById(mappingDTO.getUserID());
+        if (userAvailableOptional.isEmpty()) {
+            throw new DeviceServiceException("The user was not found!");
+        }
 
-        UserAvailable userAvailable = new UserAvailable(mapppingDTO.getUserID());
+        UserAvailable userAvailable = userAvailableOptional.get();
 
-        foundDevice.setUserAvailable(userAvailable); // because this could lead to NullPointerException
+        if (foundDevice != null) {
+            foundDevice.setUserAvailable(userAvailable);
 
-        deviceRepository.save(foundDevice);
+            return deviceRepository.save(foundDevice);
+        } else {
+            throw new DeviceServiceException("The device was not found!");
+        }
     }
 
+    public void deleteMapping(Integer deviceId) {
+        Optional<Device> deviceOptional = deviceRepository.findById(deviceId);
+        if (deviceOptional.isPresent()) {
+            Device foundDevice = deviceOptional.get();
+            foundDevice.setUserAvailable(null);
+            deviceRepository.save(foundDevice);
+        } else {
+            throw new DeviceServiceException("The device was not found!");
+        }
+    }
+
+    public List<DeviceDTO> getAllDevicesForUserId(Integer userId) {
+        Optional<UserAvailable> userAvailableOptional = userAvailableRepository.findById(userId);
+        if (userAvailableOptional.isEmpty()) {
+            throw new DeviceServiceException("The user was not found!");
+        }
+        UserAvailable userAvailable = userAvailableOptional.get();
+        List<Device> deviceList = deviceRepository.findAllByUserAvailable(userAvailable);
+
+        return deviceList.stream().map(x -> {
+
+            return DeviceDTO.builder()
+                    .id(x.getId())
+                    .address(x.getAddress())
+                    .consumption(x.getConsumption())
+                    .description(x.getDescription())
+                    .userAvailable(x.getUserAvailable())
+                    .build();
+        }).toList();
+    }
 }
