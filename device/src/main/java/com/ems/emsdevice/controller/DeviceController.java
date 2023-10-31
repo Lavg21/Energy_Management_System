@@ -7,14 +7,12 @@ import com.ems.emsdevice.exception.DeviceNotFoundException;
 import com.ems.emsdevice.exception.DeviceServiceException;
 import com.ems.emsdevice.service.DeviceService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
