@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -27,22 +26,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
         try {
-            User user = User.builder()
-                    .name(userDTO.getName())
-                    .email(userDTO.getEmail())
-                    .password(userDTO.getPassword())
-                    .admin(userDTO.isAdmin())
-                    .build();
-
-            User createdUser = userService.createUser(user);
-
-            UserDTO createdUserDTO = UserDTO.builder()
-                    .id(createdUser.getId())
-                    .name(createdUser.getName())
-                    .email(createdUser.getEmail())
-                    .password(createdUser.getPassword())
-                    .admin(createdUser.isAdmin())
-                    .build();
+            UserDTO createdUserDTO = userService.createUser(userDTO);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
@@ -56,14 +40,7 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users != null && !users.isEmpty()) {
-            List<UserDTO> userDTOs = users.stream()
-                    .map(user -> UserDTO.builder()
-                            .id(user.getId())
-                            .name(user.getName())
-                            .email(user.getEmail())
-                            .admin(user.isAdmin())
-                            .build())
-                    .collect(Collectors.toList());
+            List<UserDTO> userDTOs = userService.getUserDTOS(users);
 
             return ResponseEntity.ok(userDTOs);
         } else {
@@ -73,16 +50,12 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserDTO> getUserByToken(@RequestHeader("Authorization") String token) {
+
         User user = userService.findUserById(JwtAuthorizationFilter.getUserIdFromJwt(token));
 
         if (user != null) {
 
-            UserDTO userDTO = UserDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
-                    .email(user.getEmail())
-                    .admin(user.isAdmin())
-                    .build();
+            UserDTO userDTO = userService.convertToDTO(user);
 
             return ResponseEntity.ok(userDTO);
         } else {
@@ -96,12 +69,7 @@ public class UserController {
 
         if (user != null) {
 
-            UserDTO userDTO = UserDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
-                    .email(user.getEmail())
-                    .admin(user.isAdmin())
-                    .build();
+            UserDTO userDTO = userService.convertToDTO(user);
 
             return ResponseEntity.ok(userDTO);
         } else {

@@ -30,12 +30,7 @@ public class DeviceController {
         try {
             Device createdDevice = deviceService.createDevice(deviceDTO);
 
-            DeviceDTO createdDeviceDTO = DeviceDTO.builder()
-                    .id(createdDevice.getId())
-                    .address(createdDevice.getAddress())
-                    .description(createdDevice.getDescription())
-                    .consumption(createdDevice.getConsumption())
-                    .build();
+            DeviceDTO createdDeviceDTO = deviceService.convertToDTO(createdDevice);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDeviceDTO);
         } catch (IllegalArgumentException exception) {
@@ -48,13 +43,7 @@ public class DeviceController {
         try {
             Device createdMapping = deviceService.createMapping(mappingDTO);
 
-            DeviceDTO createdMappingDTO = DeviceDTO.builder()
-                    .id(createdMapping.getId())
-                    .address(createdMapping.getAddress())
-                    .description(createdMapping.getDescription())
-                    .consumption(createdMapping.getConsumption())
-                    .userAvailable(createdMapping.getUserAvailable())
-                    .build();
+            DeviceDTO createdMappingDTO = deviceService.convertToDTO(createdMapping);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(createdMappingDTO);
         } catch (DeviceServiceException exception) {
@@ -68,14 +57,7 @@ public class DeviceController {
         List<Device> devices = deviceService.getAllDevices();
 
         if (devices != null && !devices.isEmpty()) {
-            List<DeviceDTO> deviceDTOs = devices.stream()
-                    .map(device -> DeviceDTO.builder()
-                            .id(device.getId())
-                            .address(device.getAddress())
-                            .description(device.getDescription())
-                            .consumption(device.getConsumption())
-                            .build())
-                    .collect(Collectors.toList());
+            List<DeviceDTO> deviceDTOs = deviceService.getDeviceDTOS(devices);
 
             return ResponseEntity.ok(deviceDTOs);
         } else {
@@ -88,14 +70,7 @@ public class DeviceController {
         List<Device> devices = deviceService.getAllUnmappedDevices();
 
         if (devices != null && !devices.isEmpty()) {
-            List<DeviceDTO> deviceDTOs = devices.stream()
-                    .map(device -> DeviceDTO.builder()
-                            .id(device.getId())
-                            .address(device.getAddress())
-                            .description(device.getDescription())
-                            .consumption(device.getConsumption())
-                            .build())
-                    .collect(Collectors.toList());
+            List<DeviceDTO> deviceDTOs = deviceService.getDeviceDTOS(devices);
 
             return ResponseEntity.ok(deviceDTOs);
         } else {
@@ -109,12 +84,7 @@ public class DeviceController {
 
         if (device != null) {
 
-            DeviceDTO deviceDTO = DeviceDTO.builder()
-                    .id(device.getId())
-                    .address(device.getAddress())
-                    .description(device.getDescription())
-                    .consumption(device.getConsumption())
-                    .build();
+            DeviceDTO deviceDTO = deviceService.convertToDTO(device);
 
             return ResponseEntity.ok(deviceDTO);
         } else {

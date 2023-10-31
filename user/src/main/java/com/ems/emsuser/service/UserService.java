@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,54 @@ public class UserService {
     @Value("${device.container.name}")
     private String deviceContainerName;
 
-    public User createUser(User user) {
+    public User convertToEntity(UserDTO userDTO) {
+
+        return User.builder()
+                .name(userDTO.getName())
+                .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
+                .admin(userDTO.isAdmin())
+                .build();
+    }
+
+    public UserDTO convertToDTO(User user) {
+
+        return  UserDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .admin(user.isAdmin())
+                .build();
+    }
+
+    public List<UserDTO> getUserDTOS(List<User> users) {
+        return users.stream()
+                .map(user -> UserDTO.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .admin(user.isAdmin())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public User findUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public UserDTO createUser(UserDTO userDTO) {
+
+        User user = convertToEntity(userDTO);
+
         if (StringUtils.isBlank(user.getName()) || StringUtils.isBlank(user.getEmail()) || StringUtils.isBlank(user.getPassword()))
             throw new IllegalArgumentException("Invalid data for user!");
 
@@ -50,20 +98,7 @@ public class UserService {
 
         insertIntoAvailableUsers(savedUser.getId());
 
-        return savedUser;
-    }
-
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-
-    public User findUserById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+        return convertToDTO(savedUser);
     }
 
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
@@ -82,12 +117,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(existingUser);
 
-        return UserDTO.builder()
-                .id(updatedUser.getId())
-                .name(updatedUser.getName())
-                .email(updatedUser.getEmail())
-                .admin(updatedUser.isAdmin())
-                .build();
+        return convertToDTO(updatedUser);
     }
 
     public void deleteUser(Integer id) {

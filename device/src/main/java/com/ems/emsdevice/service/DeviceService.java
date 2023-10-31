@@ -28,12 +28,36 @@ public class DeviceService {
     @Autowired
     private final UserAvailableRepository userAvailableRepository;
 
-    public Device createDevice(DeviceDTO deviceDTO) {
-        Device device = Device.builder()
+    public DeviceDTO convertToDTO(Device device) {
+        return DeviceDTO.builder()
+                .id(device.getId())
+                .address(device.getAddress())
+                .description(device.getDescription())
+                .consumption(device.getConsumption())
+                .build();
+    }
+
+    private Device convertToEntity(DeviceDTO deviceDTO) {
+        return Device.builder()
                 .address(deviceDTO.getAddress())
                 .description(deviceDTO.getDescription())
                 .consumption(deviceDTO.getConsumption())
                 .build();
+    }
+
+    public List<DeviceDTO> getDeviceDTOS(List<Device> devices) {
+        return devices.stream()
+                .map(device -> DeviceDTO.builder()
+                        .id(device.getId())
+                        .address(device.getAddress())
+                        .description(device.getDescription())
+                        .consumption(device.getConsumption())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public Device createDevice(DeviceDTO deviceDTO) {
+        Device device = convertToEntity(deviceDTO);
 
         if (StringUtils.isBlank(device.getAddress()) || StringUtils.isBlank(device.getDescription())
                 || device.getConsumption() <= 0)
@@ -62,12 +86,7 @@ public class DeviceService {
 
         Device updatedDevice = deviceRepository.save(existingDevice);
 
-        return DeviceDTO.builder()
-                .id(updatedDevice.getId())
-                .address(updatedDevice.getAddress())
-                .description(updatedDevice.getDescription())
-                .consumption(updatedDevice.getConsumption())
-                .build();
+        return convertToDTO(updatedDevice);
     }
 
     public void deleteDevice(Integer id) {
@@ -82,6 +101,7 @@ public class DeviceService {
         Device foundDevice = deviceRepository.findById(mappingDTO.getDeviceID()).orElse(null);
 
         Optional<UserAvailable> userAvailableOptional = userAvailableRepository.findById(mappingDTO.getUserID());
+
         if (userAvailableOptional.isEmpty()) {
             throw new DeviceServiceException("The user was not found!");
         }
@@ -99,6 +119,7 @@ public class DeviceService {
 
     public void deleteMapping(Integer deviceId) {
         Optional<Device> deviceOptional = deviceRepository.findById(deviceId);
+
         if (deviceOptional.isPresent()) {
             Device foundDevice = deviceOptional.get();
             foundDevice.setUserAvailable(null);
@@ -110,21 +131,17 @@ public class DeviceService {
 
     public List<DeviceDTO> getAllDevicesForUserId(Integer userId) {
         Optional<UserAvailable> userAvailableOptional = userAvailableRepository.findById(userId);
+
         if (userAvailableOptional.isEmpty()) {
             throw new DeviceServiceException("The user was not found!");
         }
+
         UserAvailable userAvailable = userAvailableOptional.get();
         List<Device> deviceList = deviceRepository.findAllByUserAvailable(userAvailable);
 
         return deviceList.stream().map(x -> {
 
-            return DeviceDTO.builder()
-                    .id(x.getId())
-                    .address(x.getAddress())
-                    .consumption(x.getConsumption())
-                    .description(x.getDescription())
-                    .userAvailable(x.getUserAvailable())
-                    .build();
+            return convertToDTO(x);
         }).toList();
     }
 
