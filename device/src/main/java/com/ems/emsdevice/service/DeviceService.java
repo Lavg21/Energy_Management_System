@@ -1,6 +1,7 @@
 package com.ems.emsdevice.service;
 
 import com.ems.emsdevice.domain.dto.DeviceDTO;
+import com.ems.emsdevice.domain.dto.DeviceMessageDTO;
 import com.ems.emsdevice.domain.dto.MappingDTO;
 import com.ems.emsdevice.domain.entity.Device;
 import com.ems.emsdevice.domain.entity.UserAvailable;
@@ -8,14 +9,21 @@ import com.ems.emsdevice.exception.DeviceNotFoundException;
 import com.ems.emsdevice.exception.DeviceServiceException;
 import com.ems.emsdevice.repository.DeviceRepository;
 import com.ems.emsdevice.repository.UserAvailableRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +35,8 @@ public class DeviceService {
 
     @Autowired
     private final UserAvailableRepository userAvailableRepository;
+
+    private final String QUEUE_NAME = "monitoring";
 
     public DeviceDTO convertToDTO(Device device) {
         return DeviceDTO.builder()
@@ -63,7 +73,12 @@ public class DeviceService {
                 || device.getConsumption() <= 0)
             throw new IllegalArgumentException("Invalid data for device!");
         else {
-            return deviceRepository.save(device);
+
+            Device savedDevice = deviceRepository.save(device);
+
+            sendMessageToMonitoring(device.getId(), "post");
+
+            return savedDevice;
         }
     }
 
@@ -93,6 +108,8 @@ public class DeviceService {
         Device device = deviceRepository
                 .findById(id)
                 .orElseThrow(() -> new DeviceNotFoundException("Device with ID " + id + " not found"));
+
+        sendMessageToMonitoring(device.getId(), "delete");
 
         deviceRepository.delete(device);
     }
@@ -159,5 +176,36 @@ public class DeviceService {
     public List<Device> getAllUnmappedDevices() {
         List<Device> deviceList = deviceRepository.findAll();
         return deviceList.stream().filter(x -> x.getUserAvailable() == null).collect(Collectors.toList());
+    }
+
+    private void sendMessageToMonitoring(Integer deviceId, String action) {
+        // create connection to the server
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+
+            // the queue we send messages to
+            // the message content is byte array
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+            DeviceMessageDTO deviceInformation = new DeviceMessageDTO(deviceId, action);
+            String message = serializeObject(deviceInformation);
+            channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch(IOException | TimeoutException exception) {
+            throw new DeviceServiceException("There was an error when sending messages to queue!");
+        }
+    }
+
+    private String serializeObject(DeviceMessageDTO deviceMessage) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            return objectMapper.writeValueAsString(deviceMessage);
+        } catch (JsonProcessingException e) {
+            System.err.println("Could not serialize object into JSON string!");
+            return null;
+        }
     }
 }
