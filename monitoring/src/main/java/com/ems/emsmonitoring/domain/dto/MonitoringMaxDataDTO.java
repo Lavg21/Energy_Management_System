@@ -4,13 +4,11 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
 @Builder
-public class DeviceMessageDTO {
+public class MonitoringMaxDataDTO {
 
     private Integer deviceId;
     private Double maxConsumption;
-    private String action;
 }

@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class MonitoringDataDTO {
+public class MonitoringHourlyDataDTO {
 
     private Integer deviceId;
-    private Double consumption;
+    private Double hourlyConsumption;
 }

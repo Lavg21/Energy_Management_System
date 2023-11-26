@@ -1,11 +1,14 @@
 package com.ems.emsmonitoring.service;
 
 import com.ems.emsmonitoring.domain.dto.DeviceMessageDTO;
-import com.ems.emsmonitoring.domain.dto.MonitoringDataDTO;
-import com.ems.emsmonitoring.domain.entity.MonitoringData;
+import com.ems.emsmonitoring.domain.dto.MonitoringHourlyDataDTO;
+import com.ems.emsmonitoring.domain.dto.MonitoringMaxDataDTO;
+import com.ems.emsmonitoring.domain.entity.MonitoringHourlyData;
+import com.ems.emsmonitoring.domain.entity.MonitoringMaxData;
 import com.ems.emsmonitoring.exception.DeviceIdException;
 import com.ems.emsmonitoring.exception.MonitoringDataServiceException;
-import com.ems.emsmonitoring.repository.MonitoringDataRepository;
+import com.ems.emsmonitoring.repository.MonitoringHourlyDataRepository;
+import com.ems.emsmonitoring.repository.MonitoringMaxDataRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
@@ -26,7 +29,11 @@ import java.util.concurrent.TimeoutException;
 public class MonitoringDataService {
 
     @Autowired
-    private final MonitoringDataRepository monitoringDataRepository;
+    private final MonitoringHourlyDataRepository monitoringHourlyDataRepository;
+
+    @Autowired
+    private final MonitoringMaxDataRepository monitoringMaxDataRepository;
+
     private final String QUEUE_NAME = "monitoring";
 
     @PostConstruct  // This method (postConstruct()) is called after the class is constructed.
@@ -36,35 +43,35 @@ public class MonitoringDataService {
         receiveMessageFromDevice();
     }
 
-    public void createMonitoringData(MonitoringDataDTO monitoringDataDTO) {
-        MonitoringData monitoringData = convertToEntity(monitoringDataDTO);
+    public void createMonitoringMaxData(MonitoringMaxDataDTO monitoringMaxDataDTO) {
+        MonitoringMaxData monitoringMaxData = convertToMaxEntity(monitoringMaxDataDTO);
 
-        if (monitoringDataDTO.getDeviceId() == null) {
+        if (monitoringMaxDataDTO.getDeviceId() == null) {
             throw new DeviceIdException("The id of the device cannot be null!");
         } else {
-            monitoringDataRepository.save(monitoringData);
+            monitoringMaxDataRepository.save(monitoringMaxData);
         }
     }
 
     public void deleteMonitoringData(Integer deviceId) {
-        MonitoringData monitoringData = monitoringDataRepository
+        MonitoringHourlyData monitoringHourlyData = monitoringHourlyDataRepository
                 .findByDeviceId(deviceId)
                 .orElseThrow(() -> new DeviceIdException("The device with ID" + deviceId + "was not found!"));
 
-        monitoringDataRepository.delete(monitoringData);
+        monitoringHourlyDataRepository.delete(monitoringHourlyData);
     }
 
-    private MonitoringDataDTO convertToDTO(MonitoringData monitoringData) {
-        return MonitoringDataDTO.builder()
-                .deviceId(monitoringData.getDeviceId())
-                .consumption(monitoringData.getConsumption())
+    private MonitoringHourlyDataDTO convertToDTO(MonitoringHourlyData monitoringHourlyData) {
+        return MonitoringHourlyDataDTO.builder()
+                .deviceId(monitoringHourlyData.getDeviceId())
+                .hourlyConsumption(monitoringHourlyData.getHourlyConsumption())
                 .build();
     }
 
-    private MonitoringData convertToEntity(MonitoringDataDTO monitoringDataDTO) {
-        return MonitoringData.builder()
-                .deviceId(monitoringDataDTO.getDeviceId())
-                .consumption(monitoringDataDTO.getConsumption())
+    private MonitoringMaxData convertToMaxEntity(MonitoringMaxDataDTO monitoringMaxDataDTO) {
+        return MonitoringMaxData.builder()
+                .deviceId(monitoringMaxDataDTO.getDeviceId())
+                .maxConsumption(monitoringMaxDataDTO.getMaxConsumption())
                 .build();
     }
 
@@ -77,7 +84,7 @@ public class MonitoringDataService {
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+            System.out.println(" [*] Waiting for messages from device backend...");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), "UTF-8");
@@ -85,12 +92,12 @@ public class MonitoringDataService {
                 DeviceMessageDTO deviceMessage = deserializeString(message);
 
                 if (deviceMessage.getAction().equals("post")) {
-                    MonitoringDataDTO monitoringDataDTO = new MonitoringDataDTO(deviceMessage.getDeviceId(), 0.0);
-                    createMonitoringData(monitoringDataDTO);
+                    MonitoringMaxDataDTO monitoringMaxDataDTO = new MonitoringMaxDataDTO(deviceMessage.getDeviceId(), deviceMessage.getMaxConsumption());
+                    createMonitoringMaxData(monitoringMaxDataDTO);
                 } else {
                     deleteMonitoringData(deviceMessage.getDeviceId());
                 }
-                
+
                 System.out.println(" [x] Received: " + deviceMessage);
             };
             channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
