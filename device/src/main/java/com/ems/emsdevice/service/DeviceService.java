@@ -17,6 +17,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -37,6 +38,12 @@ public class DeviceService {
     private final UserAvailableRepository userAvailableRepository;
 
     private final String QUEUE_NAME = "monitoring";
+
+    @Value("${rabbit-config.ip}")
+    private String rabbitHost;
+
+    @Value("${rabbit-config.port}")
+    private Integer rabbitPort;
 
     public DeviceDTO convertToDTO(Device device) {
         return DeviceDTO.builder()
@@ -178,7 +185,9 @@ public class DeviceService {
     private void sendMessageToMonitoring(Integer deviceId, Double maxConsumption, String action) {
         // create connection to the server
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(rabbitHost);
+        factory.setPort(rabbitPort);
+
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
 

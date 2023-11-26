@@ -19,6 +19,8 @@ ENV DB_PORT=3306
 ENV DB_USER=root
 ENV DB_PASSWORD=admin
 ENV DB_DBNAME=ems_device
+ENV RMQ_IP=ems_rabbitmq
+ENV RMQ_PORT=5672
 COPY --from=builder /root/dependencies/ ./
 COPY --from=builder /root/snapshot-dependencies/ ./
 RUN sleep 10
