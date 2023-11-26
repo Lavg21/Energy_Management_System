@@ -5,9 +5,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -35,12 +33,13 @@ public class SimulatorRunner implements ApplicationRunner {
         Integer lineNumber = 0;
 
         BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader("src/main/resources/sensor.csv"));
-        } catch (IOException e) {
-            System.err.println("File sensor.csv not found!");
+        InputStream inputStream = SimulatorRunner.class.getResourceAsStream("/sensor.csv");
+        if (inputStream == null) {
+            System.err.println("Cannot create input stream for file sensor.csv!");
             return;
         }
+
+        br = new BufferedReader(new InputStreamReader(inputStream));
 
         while (true) {
             System.out.println(lineNumber);
@@ -64,7 +63,7 @@ public class SimulatorRunner implements ApplicationRunner {
             }
 
             try {
-                Thread.sleep(1000 * 60 * 10);   // 10 minutes = 1000 milliseconds * 60 * 10
+                Thread.sleep(1000);   // 10 minutes = 1000 milliseconds * 60 * 10
             } catch (InterruptedException e) {
                 System.err.println("Interruption occurred while running simulation!");
                 return;

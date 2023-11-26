@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ems</groupId>
-    <artifactId>simulator</artifactId>
+    <artifactId>ems-simulator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>simulator</name>
-    <description>simulator</description>
+    <name>energy-management-system-simulator</name>
+    <description>energy-management-system-simulator</description>
     <properties>
         <java.version>17</java.version>
     </properties>

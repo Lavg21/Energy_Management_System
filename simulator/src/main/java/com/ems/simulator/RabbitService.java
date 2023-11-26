@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,10 +16,18 @@ public class RabbitService {
 
     private final String QUEUE_NAME = "simulation";
 
+    @Value("${rabbit-config.ip}")
+    private String rabbitHost;
+
+    @Value("${rabbit-config.port}")
+    private Integer rabbitPort;
+
     public void sendMessageToMonitoring(Integer deviceId, Double consumption) {
         // create connection to the server
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(rabbitHost);
+        factory.setPort(rabbitPort);
+
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
 

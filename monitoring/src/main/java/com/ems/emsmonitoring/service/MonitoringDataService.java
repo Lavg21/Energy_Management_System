@@ -18,6 +18,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,12 @@ public class MonitoringDataService {
     private final String QUEUE_NAME_DEVICE = "monitoring";
 
     private final String QUEUE_NAME_SIMULATION = "simulation";
+
+    @Value("${rabbit-config.ip}")
+    private String rabbitHost;
+
+    @Value("${rabbit-config.port}")
+    private Integer rabbitPort;
 
     @PostConstruct  // This method (postConstruct()) is called after the class is constructed.
     @Async
@@ -101,7 +108,10 @@ public class MonitoringDataService {
         try {
             ConnectionFactory factory = new ConnectionFactory();
 
-            factory.setHost("localhost");
+            //factory.setHost("localhost");
+            factory.setHost(rabbitHost);
+            factory.setPort(rabbitPort);
+
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
 
@@ -133,7 +143,10 @@ public class MonitoringDataService {
         try {
             ConnectionFactory factory = new ConnectionFactory();
 
-            factory.setHost("localhost");
+            //factory.setHost("localhost");
+            factory.setHost(rabbitHost);
+            factory.setPort(rabbitPort);
+
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
 
