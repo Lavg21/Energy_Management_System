@@ -10,5 +10,6 @@ import lombok.*;
 public class DeviceMessageDTO {
 
     private Integer deviceId;
+    private Double maxConsumption;
     private String action;
 }

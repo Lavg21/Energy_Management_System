@@ -76,7 +76,7 @@ public class DeviceService {
 
             Device savedDevice = deviceRepository.save(device);
 
-            sendMessageToMonitoring(device.getId(), "post");
+            sendMessageToMonitoring(device.getId(), device.getConsumption(), "post");
 
             return savedDevice;
         }
@@ -109,7 +109,7 @@ public class DeviceService {
                 .findById(id)
                 .orElseThrow(() -> new DeviceNotFoundException("Device with ID " + id + " not found"));
 
-        sendMessageToMonitoring(device.getId(), "delete");
+        sendMessageToMonitoring(device.getId(), device.getConsumption(), "delete");
 
         deviceRepository.delete(device);
     }
@@ -156,10 +156,7 @@ public class DeviceService {
         UserAvailable userAvailable = userAvailableOptional.get();
         List<Device> deviceList = deviceRepository.findAllByUserAvailable(userAvailable);
 
-        return deviceList.stream().map(x -> {
-
-            return convertToDTO(x);
-        }).toList();
+        return deviceList.stream().map(this::convertToDTO).toList();
     }
 
     public List<MappingDTO> getAllMappings() {
@@ -178,7 +175,7 @@ public class DeviceService {
         return deviceList.stream().filter(x -> x.getUserAvailable() == null).collect(Collectors.toList());
     }
 
-    private void sendMessageToMonitoring(Integer deviceId, String action) {
+    private void sendMessageToMonitoring(Integer deviceId, Double maxConsumption, String action) {
         // create connection to the server
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -189,7 +186,7 @@ public class DeviceService {
             // the message content is byte array
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
-            DeviceMessageDTO deviceInformation = new DeviceMessageDTO(deviceId, action);
+            DeviceMessageDTO deviceInformation = new DeviceMessageDTO(deviceId, maxConsumption, action);
             String message = serializeObject(deviceInformation);
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
