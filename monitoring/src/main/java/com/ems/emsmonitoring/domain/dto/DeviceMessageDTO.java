@@ -8,9 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class DeviceMaxMessageDTO {
+public class DeviceMessageDTO {
 
     private Integer deviceId;
-    private Double maxConsumption;
-    private String action;
+    private Double consumption;
 }

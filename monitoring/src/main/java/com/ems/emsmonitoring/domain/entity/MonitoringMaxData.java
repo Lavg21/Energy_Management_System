@@ -22,6 +22,6 @@ public class MonitoringMaxData {
     @Column(name = "max_consumption", nullable = false)
     private Double maxConsumption;
 
-    @Column(name = "device_id", nullable = false)
+    @Column(name = "device_id", nullable = false, unique = true)
     private Integer deviceId;
 }

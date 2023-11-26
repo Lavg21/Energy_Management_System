@@ -21,6 +21,6 @@ public class MonitoringHourlyData {
     @Column(name = "hourly_consumption", nullable = false)
     private Double hourlyConsumption;
 
-    @Column(name = "device_id", nullable = false)
+    @Column(name = "device_id", nullable = false, unique = true)
     private Integer deviceId;
 }
