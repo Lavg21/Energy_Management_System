@@ -3,6 +3,7 @@ import {DeviceService} from "../../services/device-service";
 import {UserService} from "../../services/user-service";
 import {UserModel} from "../../models/user.model";
 import {UserDevicesModel} from "../../models/user-devices.model";
+import {UserDialogService} from "../../services/user-dialog.service";
 
 @Component({
   selector: 'app-user-devices',
@@ -15,7 +16,7 @@ export class UserDevicesComponent implements OnInit{
 
   user!: UserModel;
 
-  constructor(private deviceService: DeviceService, private userService: UserService) {
+  constructor(private deviceService: DeviceService, private userService: UserService, private userDialogService: UserDialogService) {
     this.userService.getUserByToken().subscribe(data => {
       this.user = data.body;
       this.getDevicesForUser(this.user.id);
@@ -39,4 +40,9 @@ export class UserDevicesComponent implements OnInit{
     });
   }
 
+  openChat(user: UserModel) {
+    console.log(user);
+    // this.router.navigate(['/chat', userId]);
+    this.userDialogService.openChatDialog(user);
+  }
 }

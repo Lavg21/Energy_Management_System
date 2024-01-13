@@ -60,10 +60,10 @@ export class UserOptionsComponent {
     }
   }
 
-  openChat(userId: number) {
-    console.log(userId);
+  openChat(user: UserModel) {
+    console.log(user);
     // this.router.navigate(['/chat', userId]);
-    this.userDialogService.openChatDialog(userId);
+    this.userDialogService.openChatDialog(user);
   }
 
   reloadCurrentRoute() {

@@ -73,12 +73,3 @@ button {
 button:hover {
   background-color: #457da0;
 }
-
-svg {
-  width: 2rem;
-  height: 2rem;
-  position: relative;
-  fill: black;
-  cursor: pointer;
-  right: 0;
-}
