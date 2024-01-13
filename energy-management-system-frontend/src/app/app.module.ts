@@ -20,6 +20,7 @@ import { EditDeviceComponent } from './components/device-options/edit-device/edi
 import { MappingOptionsComponent } from './components/mapping-options/mapping-options.component';
 import { AddMappingComponent } from './components/mapping-options/add-mapping/add-mapping.component';
 import { UserDevicesComponent } from './components/user-devices/user-devices.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { UserDevicesComponent } from './components/user-devices/user-devices.com
     MappingOptionsComponent,
     AddMappingComponent,
     UserDevicesComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

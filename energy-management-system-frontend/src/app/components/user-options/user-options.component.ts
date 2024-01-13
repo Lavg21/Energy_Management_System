@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserDialogService} from "../../services/user-dialog.service";
 import {UserModel} from "../../models/user.model";
@@ -12,6 +12,7 @@ import {UserService} from "../../services/user-service";
 export class UserOptionsComponent {
 
   users!: UserModel[];
+  @Output() sendMessageToUser = new EventEmitter<UserModel>();
 
   constructor(private router: Router, private userDialogService: UserDialogService, private userService: UserService) {
     this.userService.getAllUsers().subscribe((data) => {
@@ -57,6 +58,12 @@ export class UserOptionsComponent {
       });
       console.log("Delete button was pressed!");
     }
+  }
+
+  openChat(userId: number) {
+    console.log(userId);
+    // this.router.navigate(['/chat', userId]);
+    this.userDialogService.openChatDialog(userId);
   }
 
   reloadCurrentRoute() {

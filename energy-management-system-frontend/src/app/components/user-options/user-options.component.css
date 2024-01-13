@@ -49,14 +49,14 @@ th {
   background-color: transparent;
 }
 
-.edit-button, .delete-button {
+.edit-button, .delete-button, .chat-button {
   background-color: rgba(1, 114, 155, 0.68);
   color: black;
   border: none;
-  padding: 5%;
+  padding: 4%;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 5%;
+  margin: 2%;
   border-radius: 10%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }

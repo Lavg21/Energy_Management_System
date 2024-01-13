@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AddUserComponent} from "../components/user-options/add-user/add-user.component";
 import {EditUserComponent} from "../components/user-options/edit-user/edit-user.component";
+import {ChatComponent} from "../components/chat/chat.component";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,14 @@ export class UserDialogService {
       data: {
         userId: userId
       }
+    });
+  }
+
+  openChatDialog(userId: number) {
+    return this.dialog.open(ChatComponent, {
+      width: '25%',
+      maxHeight: '60vh',
+      data: { userId: userId },
     });
   }
 }

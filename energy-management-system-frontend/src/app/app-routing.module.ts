@@ -9,6 +9,7 @@ import {AddMappingComponent} from "./components/mapping-options/add-mapping/add-
 import {AuthGuard} from "./components/login/auth.guard";
 import {UserDevicesComponent} from "./components/user-devices/user-devices.component";
 import {AuthClientGuard} from "./components/login/auth-client.guard";
+import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
   {
@@ -47,6 +48,11 @@ const routes: Routes = [
     path: "devices",
     component: UserDevicesComponent,
     canActivate: [AuthClientGuard]
+  },
+  {
+    path: 'chat/:userId',
+    component: ChatComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
