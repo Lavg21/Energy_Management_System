@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {JWTPayload, UserService} from "../../services/user-service";
 import {Router} from "@angular/router";
-import jwtDecode from "jwt-decode";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-login',
@@ -14,10 +14,11 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isEmailError: boolean;
   isPasswordError: boolean;
+  isAdmin: boolean;
 
   responseError = null;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private tokenService: TokenService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
 
     this.isEmailError = false;
     this.isPasswordError = false;
+    this.isAdmin = false;
   }
 
   ngOnInit() {
@@ -49,21 +51,48 @@ export class LoginComponent implements OnInit {
       console.log('Email:', email);
       console.log('Password:', password);
 
-      this.userService.login(email, password).subscribe(() => {
-          this.responseError = null;
-          const token = localStorage.getItem("token");
-          const payload = jwtDecode(token!) as JWTPayload;
+      this.userService.login(email, password).subscribe(response => {
+        sessionStorage.setItem("access_token", response.token);
 
-          if (payload.scope === "ROLE_ADMIN") {
-            this.router.navigate(["/admin-menu"]);
+        const decoded = this.tokenService.decode();
+        if (decoded == null) {
+          alert("CANNOT DECODE JWT: " + response.token);
+        }
+        else {
+          console.log("DECODED JWT");
+          console.log(decoded.role);
+
+          if (decoded.role === "ROLE_ADMIN") {
+            this.isAdmin = true;
+            this.router.navigate(['/admin-menu']);
+          } else if (decoded.role === "ROLE_CLIENT") {
+            this.isAdmin = false;
+            this.router.navigate(['/devices']);
           } else {
-            this.router.navigate(["/devices"]);
+            alert("INVALID ROLE! " + decoded.role);
           }
-        },
-        error => {
-          this.responseError = error.error;
-          console.log(this.responseError);
-        });
+        }
+      }, (error) => {
+        this.responseError = error.error;
+        console.log(this.responseError);
+      });
+
+      // this.userService.login(email, password).subscribe(() => {
+      //     this.responseError = null;
+      //     const token = sessionStorage.getItem("access_token");
+      //     const payload = jwtDecode(token!) as JWTPayload;
+      //
+      //     if (payload.scope === "ROLE_ADMIN") {
+      //       this.router.navigate(["/admin-menu"]);
+      //     } else {
+      //       this.router.navigate(["/devices"]);
+      //     }
+      //   },
+      //   error => {
+      //     this.responseError = error.error;
+      //     console.log(this.responseError);
+      //   });
+
       this.loginForm.reset();
     }
   }

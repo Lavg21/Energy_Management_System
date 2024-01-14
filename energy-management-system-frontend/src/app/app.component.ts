@@ -13,6 +13,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.userService.autoLogin();
+    //this.userService.autoLogin();
   }
 }

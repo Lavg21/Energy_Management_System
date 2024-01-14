@@ -13,8 +13,13 @@ import {UserDialogService} from "../../services/user-dialog.service";
 export class UserDevicesComponent implements OnInit{
 
   devices!: UserDevicesModel[];
-
   user!: UserModel;
+  chat!: boolean;
+  admin: string = "adminLavinia@gmail.com";
+  adminId: number = 36;
+  chart: any = [];
+  showAlert!: boolean;
+  message!: string;
 
   constructor(private deviceService: DeviceService, private userService: UserService, private userDialogService: UserDialogService) {
     this.userService.getUserByToken().subscribe(data => {
@@ -40,9 +45,14 @@ export class UserDevicesComponent implements OnInit{
     });
   }
 
-  openChat(user: UserModel) {
-    console.log(user);
-    // this.router.navigate(['/chat', userId]);
-    this.userDialogService.openChatDialog(user);
+  openChat() {
+    let emitter: UserModel = this.user;
+    let recipient: UserModel = new UserModel(this.adminId, "admin", this.admin, "", "ROLE_ADMIN");
+
+    console.log(emitter);
+    console.log(recipient);
+
+    this.userDialogService.openChatDialog(emitter, recipient);
+    // this.userDialogService.openChatDialog({ recipient: this.admin, emitter: user.email });
   }
 }

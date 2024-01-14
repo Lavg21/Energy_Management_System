@@ -1,6 +1,6 @@
 <div class="chat-container">
-  <div class="chat-head">{{recipient}}
-<!--    <button (click)="exit()" class="close-button">X</button>-->
+  <div class="chat-head">{{recipient.email}}
+    <button (click)="exit()" class="close-button">X</button>
   </div>
   <div class="chat-box">
     <div *ngFor="let message of messages; let i = index" [ngClass]="{'message': true, 'sent': message.sender === 'sent', 'received': message.sender === 'received', 'read': message.read}">
@@ -11,5 +11,5 @@
     <input type="text" [(ngModel)]="userInput" (ngModelChange)="typing()" (click)="markAsRead()" placeholder="Type your message...">
     <button (click)="sendMessage()">Send</button>
   </div>
-  <div *ngIf="isTyping" class="typing-notification">{{recipient}} is typing...</div>
+  <div *ngIf="isTyping" class="typing-notification">{{recipient.email}} is typing...</div>
 </div>

@@ -21,6 +21,7 @@ import { MappingOptionsComponent } from './components/mapping-options/mapping-op
 import { AddMappingComponent } from './components/mapping-options/add-mapping/add-mapping.component';
 import { UserDevicesComponent } from './components/user-devices/user-devices.component';
 import { ChatComponent } from './components/chat/chat.component';
+import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { ChatComponent } from './components/chat/chat.component';
     BrowserAnimationsModule,
     MatDialogModule
   ],
-  providers: [UserDialogService],
+  providers: [UserDialogService, {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}, JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

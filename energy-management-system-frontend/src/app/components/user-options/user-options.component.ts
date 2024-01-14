@@ -10,11 +10,24 @@ import {UserService} from "../../services/user-service";
   styleUrls: ['./user-options.component.css'],
 })
 export class UserOptionsComponent {
-
   users!: UserModel[];
-  @Output() sendMessageToUser = new EventEmitter<UserModel>();
+  admin:string = "superadmin@gmail.com";
+  chart: any = [];
+  showAlert!: boolean;
+  message!: string;
+  username !: "test";
+  chat!: boolean;
+
+  currentUser!: UserModel;
 
   constructor(private router: Router, private userDialogService: UserDialogService, private userService: UserService) {
+    this.userService.getUserByToken().subscribe(data => {
+      this.currentUser = data.body;
+    }, error => {
+      console.log(error.status)
+      alert(error);
+    });
+
     this.userService.getAllUsers().subscribe((data) => {
       this.users = [];
       for (let i = 0; i < data.body.length; i++) {
@@ -60,10 +73,19 @@ export class UserOptionsComponent {
     }
   }
 
-  openChat(user: UserModel) {
-    console.log(user);
+  openChat(recipient: UserModel) {
+    let emitter = this.currentUser;
+
+    console.log(emitter);
+    console.log(recipient);
     // this.router.navigate(['/chat', userId]);
-    this.userDialogService.openChatDialog(user);
+    this.userDialogService.openChatDialog(emitter, recipient);
+    this.chat = true;
+   // this.sendMessageToUser.emit(user);
+  }
+
+  closeUserChat(user: string): void {
+    this.chat = false;
   }
 
   reloadCurrentRoute() {

@@ -13,22 +13,23 @@ import {MappingModel} from "../models/mapping.model";
 
 export class DeviceService {
 
-  loginUrl: string = "http://localhost:8080/login";
   devicesUrl: string = "http://localhost:8081/device";
 
   loggedUser = new BehaviorSubject<LoggedInUserModel>(null!);
 
   private tokenExpirationTimer: any;
 
-
   constructor(private httpClient: HttpClient, private router: Router) {
+
   }
 
   getDeviceById(id: number) {
     let url: string = this.devicesUrl + "/" + id;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.get<HttpResponse<any>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -37,9 +38,11 @@ export class DeviceService {
 
   getDevicesForUser(id: number) {
     let url: string = this.devicesUrl + "/user/" + id;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.get<HttpResponse<any>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -48,9 +51,11 @@ export class DeviceService {
 
   getAllDevices() {
     let url: string = this.devicesUrl;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.get<HttpResponse<any>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -59,9 +64,11 @@ export class DeviceService {
 
   getAllUnmappedDevices() {
     let url: string = this.devicesUrl + "/unmapped";
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.get<HttpResponse<any>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -70,9 +77,11 @@ export class DeviceService {
 
   addDevice(device: AddEditDeviceModel) {
     let url: string = this.devicesUrl;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.post<HttpResponse<any>>(url, device, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -81,9 +90,11 @@ export class DeviceService {
 
   updateDevice(id: number, deviceModel: AddEditDeviceModel): Observable<any> {
     let url: string = this.devicesUrl + "/" + id;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.put(url, deviceModel, {
       headers: {
+        "Authorization": "Bearer " + token,
         'Content-Type': 'application/json'
       }
     });
@@ -91,9 +102,11 @@ export class DeviceService {
 
   deleteDevice(id: number) {
     let url: string = this.devicesUrl + "/" + id;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.delete<HttpResponse<string>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       responseType: "text" as "json"
@@ -102,7 +115,7 @@ export class DeviceService {
 
   getAllMappings() {
     let url: string = this.devicesUrl + "/user/all";
-    let token = localStorage.getItem("token");
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.get<HttpResponse<any>>(url, {
       headers: {
@@ -115,9 +128,11 @@ export class DeviceService {
 
   addMapping(mapping: MappingModel) {
     let url: string = this.devicesUrl + "/mapping";
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.post<HttpResponse<any>>(url, mapping, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       observe: "response" as "body"
@@ -126,9 +141,11 @@ export class DeviceService {
 
   deleteMapping(id: number) {
     let url: string = this.devicesUrl + "/mapping/" + id;
+    let token = sessionStorage.getItem("access_token");
 
     return this.httpClient.delete<HttpResponse<string>>(url, {
       headers: {
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       responseType: "text" as "json"

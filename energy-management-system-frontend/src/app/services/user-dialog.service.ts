@@ -30,11 +30,11 @@ export class UserDialogService {
     });
   }
 
-  openChatDialog(user: UserModel) {
+  openChatDialog(emitter: UserModel, recipient: UserModel) {
     return this.dialog.open(ChatComponent, {
       width: '25%',
       maxHeight: '60vh',
-      data: { user: user },
+      data: { emitter: emitter, recipient: recipient },
     });
   }
 }
