@@ -1,5 +1,7 @@
 package com.ems.emsuser.service;
 
+import com.ems.emsuser.domain.dto.LoginRequestDTO;
+import com.ems.emsuser.domain.dto.LoginResponseDTO;
 import com.ems.emsuser.domain.dto.UserAvailableDTO;
 import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
@@ -13,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -31,6 +36,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(13);
+
+    private final AuthenticationManager authenticationManager;
+
+    private final JWTService jwtService;
 
     @Value("${device.container.name}")
     private String deviceContainerName;
@@ -51,7 +60,6 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .admin(user.isAdmin())
                 .build();
     }
@@ -99,6 +107,14 @@ public class UserService {
         insertIntoAvailableUsers(savedUser.getId());
 
         return convertToDTO(savedUser);
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
+        User user = userRepository.findByEmail(loginRequestDTO.getEmail()).orElseThrow(()-> new BadCredentialsException("Bad credentials"));
+        var jwtToken = jwtService.generateToken(user);
+        return LoginResponseDTO.builder()
+                .token(jwtToken).build();
     }
 
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
@@ -166,5 +182,4 @@ public class UserService {
             throw new ClientServerException("An unexpected error occurred when trying to insert an user!");
         }
     }
-
 }

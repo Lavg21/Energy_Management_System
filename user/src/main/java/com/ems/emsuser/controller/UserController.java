@@ -1,15 +1,18 @@
 package com.ems.emsuser.controller;
 
+import com.ems.emsuser.domain.dto.LoginRequestDTO;
+import com.ems.emsuser.domain.dto.LoginResponseDTO;
 import com.ems.emsuser.domain.dto.UserDTO;
 import com.ems.emsuser.domain.entity.User;
 import com.ems.emsuser.exception.DuplicateEmailException;
 import com.ems.emsuser.exception.UserNotFoundException;
-import com.ems.emsuser.security.JwtAuthorizationFilter;
+import com.ems.emsuser.service.JWTService;
 import com.ems.emsuser.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +23,9 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
+
+    private final JWTService jwtService;
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
@@ -33,6 +37,15 @@ public class UserController {
                     .body(createdUserDTO);
         } catch (IllegalArgumentException | DuplicateEmailException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        try {
+            return ResponseEntity.ok(userService.login(loginRequestDTO));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -48,10 +61,10 @@ public class UserController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/token")
     public ResponseEntity<UserDTO> getUserByToken(@RequestHeader("Authorization") String token) {
 
-        User user = userService.findUserById(JwtAuthorizationFilter.getUserIdFromJwt(token));
+        User user = userService.findUserById(jwtService.getIdFromToken(token.substring(7)));
 
         if (user != null) {
 

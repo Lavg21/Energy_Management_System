@@ -18,5 +18,9 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
+
 server:
   port: 8081
+
+allowed:
+  origins: ${ALLOWED_ORIGINS:http://localhost:4200}
