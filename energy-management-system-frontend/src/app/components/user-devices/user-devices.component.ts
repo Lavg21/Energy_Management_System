@@ -16,7 +16,7 @@ export class UserDevicesComponent implements OnInit{
   user!: UserModel;
   chat!: boolean;
   admin: string = "adminLavinia@gmail.com";
-  adminId: number = 36;
+  adminId: number = 1;
   chart: any = [];
   showAlert!: boolean;
   message!: string;
