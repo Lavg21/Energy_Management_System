@@ -1,0 +1,14 @@
+version: '3'
+services:
+  emsuser:
+    image: ems-user-image
+    container_name: ems-user-container
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    name: "mynetwork"
+    external: true  # So that Docker accepts the fact that the network was not created by docker compose, but was created previously
