@@ -1,0 +1,22 @@
+database:
+  ip: ${DB_IP:localhost}
+  port: ${DB_PORT:3306}
+  user: ${DB_USER:root}
+  password: ${DB_PASSWORD:admin}
+  name: ${DB_DBNAME:ems_chat}
+
+spring:
+  datasource:
+    url: jdbc:mysql://${database.ip}:${database.port}/${database.name}
+    username: ${database.user}
+    password: ${database.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+allowed:
+  origins: ${ALLOWED_ORIGINS:http://localhost:4200}
+
+server:
+  port: 8084
