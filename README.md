@@ -21,8 +21,6 @@ This project is an **Energy Management System** that enables administrators to m
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## 🏗 Architecture
 
